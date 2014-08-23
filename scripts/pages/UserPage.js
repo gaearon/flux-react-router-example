@@ -58,6 +58,10 @@ var UserPage = React.createClass({
           <Repo key={fullName} fullName={fullName} />
         )}
 
+        {this.state.starred.length === 0 &&
+          <span>None :-(</span>
+        }
+
         {hasMore &&
           <button onClick={this.handleLoadMoreClick} disabled={isFetching}>
             Load more
