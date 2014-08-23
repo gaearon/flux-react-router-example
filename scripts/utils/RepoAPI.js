@@ -33,8 +33,7 @@ var RepoAPI = {
       var response = normalizeRepoArrayResponse(res);
       RepoServerActionCreators.handleStarredReposPageSuccess(login, response);
     });
-  },
-
+  }
 };
 
 module.exports = RepoAPI;

@@ -31,7 +31,7 @@ var PaginatedStoreUtils = {
     }
 
     store = createStore({
-      hasRequested(id) {
+      hasRequestedFor(id) {
         return lists.hasOwnProperty(id);
       },
 

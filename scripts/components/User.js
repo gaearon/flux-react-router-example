@@ -4,8 +4,8 @@
 var React = require('react'),
     createStoreMixin = require('../mixins/createStoreMixin'),
     UserStore = require('../stores/UserStore'),
-    UserActionCreators = require('../actions/UserActionCreators'),
     PureRenderMixin = require('react/addons').PureRenderMixin,
+    Link = require('react-router').Link,
     PropTypes = React.PropTypes;
 
 var User = React.createClass({
@@ -21,10 +21,6 @@ var User = React.createClass({
     };
   },
 
-  componentWillMount() {
-    UserActionCreators.requestUser(this.props.login, ['name', 'avatarUrl']);
-  },
-
   render() {
     var user = this.state.user;
     if (!user) {
@@ -33,8 +29,12 @@ var User = React.createClass({
 
     return (
       <div className='User'>
-        <img src={user.avatarUrl} width='72' height='72' />
-        <h3>{user.name}</h3>
+        <Link to='user' login={user.login}>
+          <img src={user.avatarUrl} width='72' height='72' />
+          <h3>
+            {user.login} {user.name && <span>({user.name})</span>}
+          </h3>
+        </Link>
       </div>
     );
   }

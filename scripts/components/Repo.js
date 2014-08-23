@@ -5,7 +5,6 @@ var React = require('react'),
     createStoreMixin = require('../mixins/createStoreMixin'),
     RepoStore = require('../stores/RepoStore'),
     UserStore = require('../stores/UserStore'),
-    RepoActionCreators = require('../actions/RepoActionCreators'),
     PureRenderMixin = require('react/addons').PureRenderMixin,
     Link = require('react-router/Link'),
     PropTypes = React.PropTypes;
@@ -24,10 +23,6 @@ var Repo = React.createClass({
       repo: repo,
       owner: repo && UserStore.get(repo.owner)
     };
-  },
-
-  componentWillMount() {
-    RepoActionCreators.requestRepo(this.props.fullName);
   },
 
   render() {

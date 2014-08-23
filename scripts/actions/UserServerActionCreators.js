@@ -17,6 +17,23 @@ var UserServerActionCreators = {
     AppDispatcher.handleServerAction({
       type: ActionTypes.REQUEST_USER_ERROR
     });
+  },
+
+  handleStargazerPageSuccess(fullName, response) {
+    AppDispatcher.handleServerAction({
+      type: ActionTypes.REQUEST_STARGAZER_PAGE_SUCCESS,
+      fullName: fullName,
+      response: response
+    });
+  },
+
+  handleStargazerPageError(fullName, err) {
+    console.log(err);
+
+    AppDispatcher.handleServerAction({
+      type: ActionTypes.REQUEST_STARGAZER_PAGE_ERROR,
+      fullName: fullName
+    });
   }
 };
 

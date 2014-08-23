@@ -20,9 +20,13 @@ var RepoActionCreators = {
     RepoAPI.requestRepo(fullName);
   },
 
-  requestStarredReposPage(login) {
+  requestStarredReposPage(login, isInitialRequest) {
     if (StarredRepoStore.isFetchingFor(login) ||
        !StarredRepoStore.mayHaveNextPageFor(login)) {
+      return;
+    }
+
+    if (isInitialRequest && StarredRepoStore.hasRequestedFor(login)) {
       return;
     }
 

@@ -50,6 +50,13 @@ var APIUtils = {
     );
   },
 
+  normalizeUserArrayResponse(response) {
+    return merge(
+      normalize(camelizeKeys(response.body), arrayOf(user)),
+      APIUtils.extractPagination(response)
+    );
+  },
+
   normalizeRepoResponse(response) {
     return merge(
       normalize(camelizeKeys(response.body), repo),

@@ -5,6 +5,7 @@ var React = require('react'),
     User = require('../components/user'),
     Repo = require('../components/repo'),
     RepoActionCreators = require('../actions/RepoActionCreators'),
+    UserActionCreators = require('../actions/UserActionCreators'),
     StarredRepoStore = require('../stores/StarredRepoStore'),
     createStoreMixin = require('../mixins/createStoreMixin'),
     PropTypes = React.PropTypes;
@@ -28,10 +29,9 @@ var UserPage = React.createClass({
     };
   },
 
-  componentWillMount() {
-    if (!StarredRepoStore.hasRequested(this.getLogin())) {
-      this.requestStarredPage();
-    }
+  componentDidMount() {
+    UserActionCreators.requestUser(this.getLogin(), ['name', 'avatarUrl']);
+    this.requestStarredPage(true);
   },
 
   render() {
@@ -52,6 +52,7 @@ var UserPage = React.createClass({
   renderStarredRepos() {
     var login = this.getLogin(),
         isFetching = StarredRepoStore.isFetchingFor(login),
+        isEmpty = this.state.starred.length === 0,
         mayHaveMore = StarredRepoStore.mayHaveNextPageFor(login);
 
     return (
@@ -60,11 +61,15 @@ var UserPage = React.createClass({
           <Repo key={fullName} fullName={fullName} />
         )}
 
-        {this.state.starred.length === 0 &&
+        {isEmpty && !isFetching &&
           <span>None :-(</span>
         }
 
-        {mayHaveMore &&
+        {isEmpty && isFetching &&
+          <span>Loading...</span>
+        }
+
+        {!isEmpty && (isFetching || mayHaveMore) &&
           <button onClick={this.handleLoadMoreClick} disabled={isFetching}>
             {isFetching ? 'Loading...' : 'Load more'}
           </button>
@@ -77,8 +82,8 @@ var UserPage = React.createClass({
     this.requestStarredPage();
   },
 
-  requestStarredPage() {
-    RepoActionCreators.requestStarredReposPage(this.getLogin());
+  requestStarredPage(isInitialRequest) {
+    RepoActionCreators.requestStarredReposPage(this.getLogin(), isInitialRequest);
   }
 });
 
