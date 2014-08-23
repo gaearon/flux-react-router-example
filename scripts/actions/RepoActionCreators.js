@@ -22,7 +22,7 @@ var RepoActionCreators = {
 
   requestStarredReposPage(login) {
     if (StarredRepoStore.isFetchingFor(login) ||
-       !StarredRepoStore.hasNextPageFor(login)) {
+       !StarredRepoStore.mayHaveNextPageFor(login)) {
       return;
     }
 

@@ -19,7 +19,9 @@ function createStoreMixin(...stores) {
     },
 
     handleStoresChanged() {
-      this.setState(this.getStateFromStores());
+      if (this.isMounted()) {
+        this.setState(this.getStateFromStores());
+      }
     }
   };
 

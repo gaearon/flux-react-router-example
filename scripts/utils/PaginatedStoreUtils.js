@@ -12,7 +12,6 @@ var PaginatedStoreUtils = {
     success: successAction,
     error: errorAction
   }) {
-
     invariant(requestAction, 'Pass a valid request action.');
     invariant(successAction, 'Pass a valid success action.');
     invariant(errorAction, 'Pass a valid error action.');
@@ -21,9 +20,14 @@ var PaginatedStoreUtils = {
         store,
         handler;
 
-    function applyIfExists(id, f) {
-      var list = lists[id];
-      return list ? f(list) : null;
+    function applyIfExists(id, f, defaultValue) {
+      if (typeof defaultValue === 'undefined') {
+        defaultValue = null;
+      }
+
+      return lists.hasOwnProperty(id) ?
+        f(lists[id]) :
+        defaultValue;
     }
 
     store = createStore({
@@ -39,8 +43,12 @@ var PaginatedStoreUtils = {
         return applyIfExists(id, list => list.isExpectingPage());
       },
 
-      hasNextPageFor(id) {
-        return applyIfExists(id, list => list.hasNextPage());
+      mayHaveNextPageFor(id) {
+        return applyIfExists(
+          id,
+          list => list.hasNextPage() || list.getPageCount() === 0,
+          true
+        );
       },
 
       getNextPageUrlFor(id) {

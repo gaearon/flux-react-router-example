@@ -50,7 +50,7 @@ var UserPage = React.createClass({
   renderStarredRepos() {
     var login = this.getLogin(),
         isFetching = StarredRepoStore.isFetchingFor(login),
-        hasMore = StarredRepoStore.hasNextPageFor(login);
+        mayHaveMore = StarredRepoStore.mayHaveNextPageFor(login);
 
     return (
       <div>
@@ -62,9 +62,9 @@ var UserPage = React.createClass({
           <span>None :-(</span>
         }
 
-        {hasMore &&
+        {mayHaveMore &&
           <button onClick={this.handleLoadMoreClick} disabled={isFetching}>
-            Load more
+            {isFetching ? 'Loading...' : 'Load more'}
           </button>
         }
       </div>
