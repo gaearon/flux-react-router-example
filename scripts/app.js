@@ -1,12 +1,13 @@
 /** @jsx React.DOM */
 'use strict';
 
-var React = require('react');
+var React = require('react'),
+    User = require('./components/User');
 
 var App = React.createClass({
   render() {
     return (
-      <h1>Hello, world.</h1>
+      <User login='gaearon' />
     );
   }
 });
