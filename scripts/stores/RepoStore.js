@@ -3,11 +3,16 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher'),
     StoreUtils = require('../utils/StoreUtils'),
     createStore = StoreUtils.createStore,
-    mergeIntoEntityBag = StoreUtils.mergeIntoEntityBag;
+    mergeIntoBag = StoreUtils.mergeIntoBag,
+    isInBagWith = StoreUtils.isInBagWith;
 
 var repos = {};
 
 var RepoStore = createStore({
+  contains(fullName, fields) {
+    return isInBagWith(repos, fullName, fields);
+  },
+
   get(fullName) {
     return repos[fullName];
   }
@@ -18,7 +23,7 @@ AppDispatcher.register(function (payload) {
       entities = action.entities;
 
   if (entities && entities.repos) {
-    mergeIntoEntityBag(repos, entities.repos);
+    mergeIntoBag(repos, entities.repos);
     RepoStore.emitChange();
   }
 });

@@ -28,7 +28,20 @@ var StoreUtils = {
     return store;
   },
 
-  mergeIntoEntityBag(bag, entities, transform) {
+  isInBagWith(bag, id, fields) {
+    if (!fields) {
+      fields = [];
+    }
+
+    var item = bag[id];
+    if (!bag[id]) {
+      return;
+    }
+
+    return fields.every(field => item.hasOwnProperty(field));
+  },
+
+  mergeIntoBag(bag, entities, transform) {
     if (!transform) {
       transform = (x) => x;
     }

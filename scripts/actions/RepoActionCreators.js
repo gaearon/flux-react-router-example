@@ -6,8 +6,8 @@ var AppDispatcher = require('../dispatcher/AppDispatcher'),
     RepoStore = require('../stores/RepoStore');
 
 var RepoActionCreators = {
-  requestRepo(fullName) {
-    if (RepoStore.get(fullName)) {
+  requestRepo(fullName, fields) {
+    if (RepoStore.contains(fullName, fields)) {
       return;
     }
 

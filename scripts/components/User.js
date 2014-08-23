@@ -22,7 +22,7 @@ var User = React.createClass({
   },
 
   componentWillMount() {
-    UserActionCreators.requestUser(this.props.login);
+    UserActionCreators.requestUser(this.props.login, ['name', 'avatarUrl']);
   },
 
   render() {

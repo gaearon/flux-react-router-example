@@ -3,11 +3,16 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher'),
     StoreUtils = require('../utils/StoreUtils'),
     createStore = StoreUtils.createStore,
-    mergeIntoEntityBag = StoreUtils.mergeIntoEntityBag;
+    mergeIntoBag = StoreUtils.mergeIntoBag,
+    isInBagWith = StoreUtils.isInBagWith;
 
 var users = {};
 
 var UserStore = createStore({
+  contains(login, fields) {
+    return isInBagWith(users, login, fields);
+  },
+
   get(login) {
     return users[login];
   }
@@ -18,7 +23,7 @@ AppDispatcher.register(function (payload) {
       entities = action.entities;
 
   if (entities && entities.users) {
-    mergeIntoEntityBag(users, entities.users);
+    mergeIntoBag(users, entities.users);
     UserStore.emitChange();
   }
 });

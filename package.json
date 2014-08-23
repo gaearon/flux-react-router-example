@@ -12,6 +12,7 @@
   },
   "devDependencies": {
     "react-hot-loader": "^0.4.1",
+    "request": "^2.40.0",
     "webpack": "^1.3.3-beta2",
     "webpack-dev-server": "^1.4.10"
   },

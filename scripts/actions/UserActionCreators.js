@@ -6,8 +6,8 @@ var AppDispatcher = require('../dispatcher/AppDispatcher'),
     UserStore = require('../stores/UserStore');
 
 var UserActionCreators = {
-  requestUser(login) {
-    if (UserStore.get(login)) {
+  requestUser(login, fields) {
+    if (UserStore.contains(login, fields)) {
       return;
     }
 
