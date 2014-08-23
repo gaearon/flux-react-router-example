@@ -1,24 +1,18 @@
 'use strict';
 
-var request = require('superagent'),
-    UserServerActionCreators = require('../actions/UserServerActionCreators'),
-    APIUtils = require('./APIUtils'),
-    normalizeUserResponse = APIUtils.normalizeUserResponse;
-
-function requestAPI(endpoint) {
-  return request('https://api.github.com/' + endpoint);
-}
+var UserServerActionCreators = require('../actions/UserServerActionCreators'),
+    { request, normalizeUserResponse } = require('./APIUtils');
 
 var UserAPI = {
   requestUser(login) {
-    requestAPI('users/' + login).end(function (res) {
+    request('users/' + login).end(function (res) {
       if (!res.ok) {
         UserServerActionCreators.handleUserError(res.text);
         return;
       }
 
-      var { response: userId, entities } = normalizeUserResponse(res.body);
-      UserServerActionCreators.handleUserSuccess(userId, entities);
+      var { entities } = normalizeUserResponse(res.body);
+      UserServerActionCreators.handleUserSuccess(entities);
     });
   }
 };

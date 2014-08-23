@@ -2,12 +2,16 @@
 'use strict';
 
 var React = require('react'),
-    User = require('./components/User');
+    User = require('./components/User'),
+    Repo = require('./components/Repo');
 
 var App = React.createClass({
   render() {
     return (
-      <User login='gaearon' />
+      <div>
+        <User login='gaearon' />
+        <Repo fullName='gaearon/react-hot-loader' />
+      </div>
     );
   }
 });

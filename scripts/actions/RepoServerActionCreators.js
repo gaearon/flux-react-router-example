@@ -3,21 +3,21 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher'),
     ActionTypes = require('../constants/ActionTypes');
 
-var UserServerActionCreators = {
-  handleUserSuccess(entities) {
+var RepoServerActionCreators = {
+  handleRepoSuccess(entities) {
     AppDispatcher.handleServerAction({
-      type: ActionTypes.REQUEST_USER_SUCCESS,
+      type: ActionTypes.REQUEST_REPO_SUCCESS,
       entities: entities
     });
   },
 
-  handleUserError(err) {
+  handleRepoError(err) {
     console.log(err);
 
     AppDispatcher.handleServerAction({
-      type: ActionTypes.REQUEST_USER_ERROR
+      type: ActionTypes.REQUEST_REPO_ERROR
     });
   }
 };
 
-module.exports = UserServerActionCreators;
+module.exports = RepoServerActionCreators;
