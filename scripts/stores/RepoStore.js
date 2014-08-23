@@ -18,12 +18,14 @@ var RepoStore = createStore({
   }
 });
 
-AppDispatcher.register(function (payload) {
+RepoStore.dispatchToken = AppDispatcher.register(function (payload) {
   var action = payload.action,
-      entities = action.entities;
+      response = action.response,
+      entities = response && response.entities,
+      fetchedRepos = entities && entities.repos;
 
-  if (entities && entities.repos) {
-    mergeIntoBag(repos, entities.repos);
+  if (fetchedRepos) {
+    mergeIntoBag(repos, fetchedRepos);
     RepoStore.emitChange();
   }
 });

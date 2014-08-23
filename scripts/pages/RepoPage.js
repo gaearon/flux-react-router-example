@@ -14,9 +14,16 @@ var RepoPage = React.createClass({
     }).isRequired
   },
 
+  getLogin() {
+    return this.props.params.login;
+  },
+
+  getName() {
+    return this.props.params.name;
+  },
+
   getFullName() {
-    var params = this.props.params;
-    return params.login + '/' + params.name;
+    return this.getLogin() + '/' + this.getName();
   },
 
   render() {

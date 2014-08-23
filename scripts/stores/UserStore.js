@@ -18,12 +18,14 @@ var UserStore = createStore({
   }
 });
 
-AppDispatcher.register(function (payload) {
+UserStore.dispatchToken = AppDispatcher.register(function (payload) {
   var action = payload.action,
-      entities = action.entities;
+      response = action.response,
+      entities = response && response.entities,
+      fetchedUsers = entities && entities.users;
 
-  if (entities && entities.users) {
-    mergeIntoBag(users, entities.users);
+  if (fetchedUsers) {
+    mergeIntoBag(users, fetchedUsers);
     UserStore.emitChange();
   }
 });

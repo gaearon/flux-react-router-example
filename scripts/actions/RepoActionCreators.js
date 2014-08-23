@@ -3,6 +3,7 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher'),
     ActionTypes = require('../constants/ActionTypes'),
     RepoAPI = require('../utils/RepoAPI'),
+    StarredRepoStore = require('../stores/StarredRepoStore'),
     RepoStore = require('../stores/RepoStore');
 
 var RepoActionCreators = {
@@ -17,6 +18,20 @@ var RepoActionCreators = {
     });
 
     RepoAPI.requestRepo(fullName);
+  },
+
+  requestStarredReposPage(login) {
+    if (StarredRepoStore.isFetchingFor(login)) {
+      return;
+    }
+
+    AppDispatcher.handleViewAction({
+      type: ActionTypes.REQUEST_STARRED_REPOS_PAGE,
+      login: login
+    });
+
+    var nextPageUrl = StarredRepoStore.getNextPageUrlFor(login);
+    RepoAPI.requestStarredReposPage(login, nextPageUrl);
   }
 };
 

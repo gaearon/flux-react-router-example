@@ -4,10 +4,10 @@ var AppDispatcher = require('../dispatcher/AppDispatcher'),
     ActionTypes = require('../constants/ActionTypes');
 
 var UserServerActionCreators = {
-  handleUserSuccess(entities) {
+  handleUserSuccess(response) {
     AppDispatcher.handleServerAction({
       type: ActionTypes.REQUEST_USER_SUCCESS,
-      entities: entities
+      response: response
     });
   },
 

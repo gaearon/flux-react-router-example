@@ -11,8 +11,8 @@ var UserAPI = {
         return;
       }
 
-      var { entities } = normalizeUserResponse(res.body);
-      UserServerActionCreators.handleUserSuccess(entities);
+      var response = normalizeUserResponse(res);
+      UserServerActionCreators.handleUserSuccess(response);
     });
   }
 };

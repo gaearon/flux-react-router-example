@@ -4,10 +4,10 @@ var AppDispatcher = require('../dispatcher/AppDispatcher'),
     ActionTypes = require('../constants/ActionTypes');
 
 var RepoServerActionCreators = {
-  handleRepoSuccess(entities) {
+  handleRepoSuccess(response) {
     AppDispatcher.handleServerAction({
       type: ActionTypes.REQUEST_REPO_SUCCESS,
-      entities: entities
+      response: response
     });
   },
 
@@ -16,6 +16,23 @@ var RepoServerActionCreators = {
 
     AppDispatcher.handleServerAction({
       type: ActionTypes.REQUEST_REPO_ERROR
+    });
+  },
+
+  handleStarredReposPageSuccess(login, response) {
+    AppDispatcher.handleServerAction({
+      type: ActionTypes.REQUEST_STARRED_REPOS_PAGE_SUCCESS,
+      login: login,
+      response: response
+    });
+  },
+
+  handleStarredReposPageError(login, err) {
+    console.log(err);
+
+    AppDispatcher.handleServerAction({
+      type: ActionTypes.REQUEST_STARRED_REPOS_PAGE_ERROR,
+      login: login
     });
   }
 };
