@@ -1,16 +1,18 @@
 'use strict';
 
-var AppDispatcher = require('../dispatcher/AppDispatcher'),
-    StoreUtils = require('../utils/StoreUtils'),
-    createStore = StoreUtils.createStore,
-    mergeIntoBag = StoreUtils.mergeIntoBag,
-    isInBagWith = StoreUtils.isInBagWith;
+var AppDispatcher = require('../dispatcher/AppDispatcher');
+
+var {
+  createStore,
+  mergeIntoBag,
+  isInBag
+} = require('../utils/StoreUtils');
 
 var users = {};
 
 var UserStore = createStore({
   contains(login, fields) {
-    return isInBagWith(users, login, fields);
+    return isInBag(users, login, fields);
   },
 
   get(login) {

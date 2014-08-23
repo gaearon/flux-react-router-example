@@ -28,7 +28,7 @@ var StoreUtils = {
     return store;
   },
 
-  isInBagWith(bag, id, fields) {
+  isInBag(bag, id, fields) {
     if (!fields) {
       fields = [];
     }
