@@ -1,0 +1,30 @@
+{
+  "name": "flux-react-router-example",
+  "version": "0.1.0",
+  "description": "A sample app featuring Flux and React Router",
+  "dependencies": {
+    "jsx-loader": "^0.11.0",
+    "normalizr": "^0.1.2",
+    "react": "^0.11.1",
+    "react-router": "^0.5.2",
+    "superagent": "^0.18.2"
+  },
+  "devDependencies": {
+    "react-hot-loader": "^0.4.1",
+    "webpack": "^1.3.3-beta2",
+    "webpack-dev-server": "^1.4.10"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gaearon/flux-react-router-example.git"
+  },
+  "author": "Dan Abramov <dan.abramov@me.com> (http://github.com/gaearon)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gaearon/flux-react-router-example/issues"
+  },
+  "homepage": "https://github.com/gaearon/flux-react-router-example"
+}
