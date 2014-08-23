@@ -49,7 +49,7 @@ var Repo = React.createClass({
             {owner.login}
           </Link>
         </h3>
-        <h4>{repo.description}</h4>
+        <p>{repo.description}</p>
       </div>
     );
   }
