@@ -26,7 +26,7 @@ var RepoAPI = {
 
     request(url).end(function (res) {
       if (!res.ok) {
-        RepoServerActionCreators.handleStarredReposPageError(res.text);
+        RepoServerActionCreators.handleStarredReposPageError(login, res.text);
         return;
       }
 

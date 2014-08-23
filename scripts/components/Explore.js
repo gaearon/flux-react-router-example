@@ -10,7 +10,7 @@ var Explore = React.createClass({
 
   getInitialState() {
     return {
-      loginOrRepo: null
+      loginOrRepo: 'gaearon'
     };
   },
 
@@ -18,7 +18,9 @@ var Explore = React.createClass({
     return (
       <div className='Explore'>
         <p>Type a username or repo full name and hit 'Go':</p>
-        <input valueLink={this.linkState('loginOrRepo')} onKeyUp={this.handleKeyUp} />
+        <input autoFocus
+               valueLink={this.linkState('loginOrRepo')}
+               onKeyUp={this.handleKeyUp} />
         <button onClick={this.handleGoClick}>Go!</button>
       </div>
     );

@@ -31,6 +31,10 @@ var PaginatedStoreUtils = {
     }
 
     store = createStore({
+      hasRequested(id) {
+        return lists.hasOwnProperty(id);
+      },
+
       getAllFor(id) {
         return applyIfExists(id, list => list.getAll());
       },

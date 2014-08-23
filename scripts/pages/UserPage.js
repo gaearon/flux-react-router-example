@@ -29,7 +29,9 @@ var UserPage = React.createClass({
   },
 
   componentWillMount() {
-    this.requestStarredPage();
+    if (!StarredRepoStore.hasRequested(this.getLogin())) {
+      this.requestStarredPage();
+    }
   },
 
   render() {
