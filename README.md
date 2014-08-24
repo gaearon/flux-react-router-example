@@ -12,7 +12,7 @@ I tried to keep it close to real world (pagination, no fake localStorage APIs).
 There are a few interesting bits here I was especially interested in:
 
 * It uses [Flux architecture](https://github.com/facebook/flux) and [react-router](https://github.com/rackt/react-router);
-* It can show user page with partial known info and loads details on the go;
+* It can show user page with partial known info and load details on the go;
 * It supports pagination both for users and repos;
 * It parses Github's nested JSON responses with [normalizr](https://github.com/gaearon/normalizr);
 * Content Stores [don't need to contain a giant `switch` with actions](https://github.com/gaearon/flux-react-router-example/blob/master/scripts/stores/UserStore.js#L27);
