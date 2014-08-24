@@ -9,7 +9,7 @@ It uses open Github API to display starred repos by users and stargazers by repo
 I made it to document a few approaches I have tried while learning Flux.  
 I tried to keep it close to real world (pagination, no fake localStorage APIs).
 
-There are a few interesting bits here I was especially interested in:
+There are a few bits here I was especially interested in:
 
 * It uses [Flux architecture](https://github.com/facebook/flux) and [react-router](https://github.com/rackt/react-router);
 * It can show user page with partial known info and load details on the go;
