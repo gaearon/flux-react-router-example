@@ -18,6 +18,13 @@ There are a few bits here I was especially interested in:
 * Content Stores [don't need to contain a giant `switch` with actions](https://github.com/gaearon/flux-react-router-example/blob/master/scripts/stores/UserStore.js#L27);
 * “Back” is immediate (because all data is in Stores).
 
+### Running
+
+```
+npm install
+npm start
+```
+
 ### How I Classify Stores
 
 I tried to avoid some of the duplication I've seen in other Flux example, specifically in Stores.
