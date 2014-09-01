@@ -6,7 +6,8 @@ var Dispatcher = require('./Dispatcher'),
 
 var AppDispatcher = copyProperties(new Dispatcher(), {
   handleServerAction(action) {
-    console.log('server action', action);
+    console.log('\n-=-=-=-=-=-=-=-=-=-');
+    console.log(action);
 
     if (!action.type) {
       throw new Error('Empty action.type: you likely mistyped the action.');
@@ -16,10 +17,13 @@ var AppDispatcher = copyProperties(new Dispatcher(), {
       source: PayloadSources.SERVER_ACTION,
       action: action
     });
+
+    console.log('-=-=-=-=-=-=-=-=-=-\n');
   },
 
   handleViewAction(action) {
-    console.log('view action', action);
+    console.log('\n-=-=-=-=-=-=-=-=-=-');
+    console.log(action);
 
     if (!action.type) {
       throw new Error('Empty action.type: you likely mistyped the action.');
@@ -29,6 +33,8 @@ var AppDispatcher = copyProperties(new Dispatcher(), {
       source: PayloadSources.VIEW_ACTION,
       action: action
     });
+
+    console.log('-=-=-=-=-=-=-=-=-=-\n');
   }
 });
 

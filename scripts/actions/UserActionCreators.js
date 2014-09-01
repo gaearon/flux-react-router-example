@@ -21,12 +21,12 @@ var UserActionCreators = {
   },
 
   requestStargazerPage(fullName, isInitialRequest) {
-    if (StargazerUserStore.isFetchingFor(fullName) ||
-       !StargazerUserStore.mayHaveNextPageFor(fullName)) {
+    if (StargazerUserStore.isExpectingPageFor(fullName) ||
+        StargazerUserStore.isLastPageFor(fullName)) {
       return;
     }
 
-    if (isInitialRequest && StargazerUserStore.hasRequestedFor(fullName)) {
+    if (isInitialRequest && StargazerUserStore.getPageCountFor(fullName) > 0) {
       return;
     }
 

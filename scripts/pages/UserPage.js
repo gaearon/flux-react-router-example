@@ -51,13 +51,13 @@ var UserPage = React.createClass({
 
   renderStarredRepos() {
     var login = this.getLogin(),
-        isFetching = StarredRepoStore.isFetchingFor(login),
+        isFetching = StarredRepoStore.isExpectingPageFor(login),
         isEmpty = this.state.starred.length === 0,
-        mayHaveMore = StarredRepoStore.mayHaveNextPageFor(login);
+        mayHaveMore = !StarredRepoStore.isLastPageFor(login);
 
     return (
       <div>
-        {this.state.starred.map(fullName =>
+        {this.state.starred.toJS().map(fullName =>
           <Repo key={fullName} fullName={fullName} />
         )}
 

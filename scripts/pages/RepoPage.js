@@ -61,12 +61,12 @@ var RepoPage = React.createClass({
   renderStargazers() {
     var fullName = this.getFullName(),
         isEmpty = this.state.stargazers.length === 0,
-        isFetching = StargazerUserStore.isFetchingFor(fullName),
-        mayHaveMore = StargazerUserStore.mayHaveNextPageFor(fullName);
+        isFetching = StargazerUserStore.isExpectingPageFor(fullName),
+        mayHaveMore = !StargazerUserStore.isLastPageFor(fullName);
 
     return (
       <div>
-        {this.state.stargazers.map(login =>
+        {this.state.stargazers.toJS().map(login =>
           <User key={login} login={login} />
         )}
 

@@ -21,7 +21,7 @@ var Repo = React.createClass({
 
     return {
       repo: repo,
-      owner: repo && UserStore.get(repo.owner)
+      owner: repo && UserStore.get(repo.get('owner'))
     };
   },
 
@@ -32,6 +32,9 @@ var Repo = React.createClass({
     if (!repo || !owner) {
       return <span>Loading {this.props.fullName}...</span>;
     }
+
+    repo = repo.toJS();
+    owner = owner.toJS();
 
     return (
       <div className='Repo'>

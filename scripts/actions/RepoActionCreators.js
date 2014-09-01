@@ -21,12 +21,12 @@ var RepoActionCreators = {
   },
 
   requestStarredReposPage(login, isInitialRequest) {
-    if (StarredRepoStore.isFetchingFor(login) ||
-       !StarredRepoStore.mayHaveNextPageFor(login)) {
+    if (StarredRepoStore.isExpectingPageFor(login) ||
+        StarredRepoStore.isLastPageFor(login)) {
       return;
     }
 
-    if (isInitialRequest && StarredRepoStore.hasRequestedFor(login)) {
+    if (isInitialRequest && StarredRepoStore.getPageCountFor(login) > 0) {
       return;
     }
 
