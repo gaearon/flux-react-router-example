@@ -2,8 +2,8 @@
 'use strict';
 
 var React = require('react'),
-    User = require('../components/user'),
-    Repo = require('../components/repo'),
+    User = require('../components/User'),
+    Repo = require('../components/Repo'),
     RepoActionCreators = require('../actions/RepoActionCreators'),
     UserActionCreators = require('../actions/UserActionCreators'),
     StarredRepoStore = require('../stores/StarredRepoStore'),
