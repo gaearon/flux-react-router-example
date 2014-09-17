@@ -4,6 +4,7 @@
   "description": "A sample app featuring Flux and React Router",
   "dependencies": {
     "humps": "0.0.1",
+    "immutable": "^2.0.16",
     "jsx-loader": "^0.11.0",
     "normalizr": "^0.1.2",
     "react": "^0.11.1",

@@ -27,6 +27,8 @@ var User = React.createClass({
       return <span>Loading {this.props.login}...</span>;
     }
 
+    user = user.toJS();
+
     return (
       <div className='User'>
         <Link to='user' login={user.login}>

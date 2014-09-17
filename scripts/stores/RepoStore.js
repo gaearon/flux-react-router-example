@@ -1,33 +1,18 @@
 'use strict';
 
-var AppDispatcher = require('../dispatcher/AppDispatcher');
+var Im = require('immutable'),
+    AppDispatcher = require('../dispatcher/AppDispatcher'),
+    { getIn, updateIn } = require('./StoreRoot'),
+    { createEntityStore, handleEntityAction } = require('../utils/EntityStoreUtils');
 
-var {
-  createStore,
-  mergeIntoBag,
-  isInBag
-} = require('../utils/StoreUtils');
-
-var repos = {};
-
-var RepoStore = createStore({
-  contains(fullName, fields) {
-    return isInBag(repos, fullName, fields);
-  },
-
-  get(fullName) {
-    return repos[fullName];
-  }
-});
+var RepoStore = createEntityStore(
+  fullName => getIn(['entities', 'users', fullName])
+);
 
 RepoStore.dispatchToken = AppDispatcher.register(function (payload) {
-  var action = payload.action,
-      response = action.response,
-      entities = response && response.entities,
-      fetchedRepos = entities && entities.repos;
-
-  if (fetchedRepos) {
-    mergeIntoBag(repos, fetchedRepos);
+  var updater = handleEntityAction(payload.action, 'repos');
+  if (updater) {
+    updateIn(['entities', 'users'], updater);
     RepoStore.emitChange();
   }
 });
