@@ -3,44 +3,29 @@
 
 var React = require('react'),
     createStoreMixin = require('../mixins/createStoreMixin'),
-    RepoStore = require('../stores/RepoStore'),
-    UserStore = require('../stores/UserStore'),
-    PureRenderMixin = require('react/addons').PureRenderMixin,
-    Link = require('react-router/Link'),
-    PropTypes = React.PropTypes;
+    { PureRenderMixin } = require('react/addons'),
+    { Link } = require('react-router'),
+    { PropTypes } = React;
 
 var Repo = React.createClass({
-  mixins: [createStoreMixin(RepoStore, UserStore), PureRenderMixin],
+  mixins: [PureRenderMixin],
 
   propTypes: {
-    fullName: PropTypes.string.isRequired
-  },
-
-  getStateFromStores() {
-    var repo = RepoStore.get(this.props.fullName);
-
-    return {
-      repo: repo,
-      owner: repo && UserStore.get(repo.owner)
-    };
+    repo: PropTypes.object.isRequired,
+    owner: PropTypes.object.isRequired
   },
 
   render() {
-    var repo = this.state.repo,
-        owner = this.state.owner;
-
-    if (!repo || !owner) {
-      return <span>Loading {this.props.fullName}...</span>;
-    }
+    var { repo, owner } = this.props;
 
     return (
       <div className='Repo'>
         <h3>
-          <Link to='repo' login={owner.login} name={repo.name}>
+          <Link to='repo' params={{login: owner.login, name: repo.name}}>
             {repo.name}
           </Link>
           {' by '}
-          <Link to='user' login={owner.login}>
+          <Link to='user' params={{login: owner.login}}>
             {owner.login}
           </Link>
         </h3>

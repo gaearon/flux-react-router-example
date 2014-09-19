@@ -3,7 +3,7 @@
 
 var React = require('react'),
     LinkedStateMixin = require('react/lib/LinkedStateMixin'),
-    transitionTo = require('react-router/transitionTo');
+    { transitionTo } = require('react-router');
 
 var Explore = React.createClass({
   mixins: [LinkedStateMixin],

@@ -6,12 +6,14 @@ var React = require('react'),
     User = require('../components/User'),
     RepoActionCreators = require('../actions/RepoActionCreators'),
     UserActionCreators = require('../actions/UserActionCreators'),
-    StargazerUserStore = require('../stores/StargazerUserStore'),
+    StargazersByRepoStore = require('../stores/StargazersByRepoStore'),
+    UserStore = require('../stores/UserStore'),
+    RepoStore = require('../stores/RepoStore'),
     createStoreMixin = require('../mixins/createStoreMixin'),
     PropTypes = React.PropTypes;
 
 var RepoPage = React.createClass({
-  mixins: [createStoreMixin(StargazerUserStore)],
+  mixins: [createStoreMixin(RepoStore, StargazersByRepoStore, UserStore)],
 
   propTypes: {
     params: PropTypes.shape({
@@ -20,54 +22,68 @@ var RepoPage = React.createClass({
     }).isRequired
   },
 
-  getLogin() {
-    return this.props.params.login;
+  parseFullName(props) {
+    props = props || this.props;
+    return props.params.login + '/' + props.params.name;
   },
 
-  getName() {
-    return this.props.params.name;
-  },
+  getStateFromStores(props) {
+    var repoFullName = this.parseFullName(props),
+        stargazers = StargazersByRepoStore.getUsers(repoFullName),
+        repo = RepoStore.get(repoFullName),
+        owner = repo && UserStore.get(repo.owner);
 
-  getFullName() {
-    return this.getLogin() + '/' + this.getName();
-  },
-
-  getStateFromStores() {
     return {
-      stargazers: StargazerUserStore.getAllFor(this.getFullName())
+      repo: repo,
+      owner: owner,
+      stargazers: stargazers
     };
   },
 
   componentDidMount() {
-    RepoActionCreators.requestRepo(this.getFullName());
-    this.requestStargazerPage(true);
+    this.repoDidChange(this.props);
+  },
+
+  componentWillReceiveProps(nextProps) {
+    if (this.parseFullName(nextProps) !== this.parseFullName(this.props)) {
+      this.setState(this.getStateFromStores(nextProps));
+      this.repoDidChange(nextProps);
+    }
+  },
+
+  repoDidChange(props) {
+    var fullName = this.parseFullName(props);
+
+    RepoActionCreators.requestRepo(fullName);
+    UserActionCreators.requestStargazerPage(fullName, true);
   },
 
   render() {
+    var { repo, owner } = this.state;
+
     return (
       <div>
-        <Repo fullName={this.getFullName()} />
+        {repo && owner ?
+          <Repo repo={repo} owner={owner} /> :
+          <h1>Loading {this.parseFullName()}...</h1>
+        }
 
         <h1>Stargazers</h1>
-
-        {this.state.stargazers ?
-          this.renderStargazers() :
-          <i>Loading...</i>
-        }
+        {this.renderStargazers()}
       </div>
     );
   },
 
   renderStargazers() {
-    var fullName = this.getFullName(),
+    var fullName = this.parseFullName(),
         isEmpty = this.state.stargazers.length === 0,
-        isFetching = StargazerUserStore.isFetchingFor(fullName),
-        mayHaveMore = StargazerUserStore.mayHaveNextPageFor(fullName);
+        isFetching = StargazersByRepoStore.isExpectingPage(fullName),
+        isLastPage = StargazersByRepoStore.isLastPage(fullName);
 
     return (
       <div>
-        {this.state.stargazers.map(login =>
-          <User key={login} login={login} />
+        {this.state.stargazers.map(user =>
+          <User key={user.login} user={user} />
         )}
 
         {isEmpty && !isFetching &&
@@ -78,7 +94,7 @@ var RepoPage = React.createClass({
           <span>Loading...</span>
         }
 
-        {!isEmpty && (isFetching || mayHaveMore) &&
+        {!isEmpty && (isFetching || !isLastPage) &&
           <button onClick={this.handleLoadMoreClick} disabled={isFetching}>
             {isFetching ? 'Loading...' : 'Load more'}
           </button>
@@ -88,11 +104,7 @@ var RepoPage = React.createClass({
   },
 
   handleLoadMoreClick() {
-    this.requestStargazerPage();
-  },
-
-  requestStargazerPage(isInitialRequest) {
-    UserActionCreators.requestStargazerPage(this.getFullName(), isInitialRequest);
+    UserActionCreators.requestStargazerPage(this.parseFullName());
   }
 });
 

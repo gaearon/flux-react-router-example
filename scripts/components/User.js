@@ -4,32 +4,23 @@
 var React = require('react'),
     createStoreMixin = require('../mixins/createStoreMixin'),
     UserStore = require('../stores/UserStore'),
-    PureRenderMixin = require('react/addons').PureRenderMixin,
-    Link = require('react-router').Link,
-    PropTypes = React.PropTypes;
+    { PureRenderMixin } = require('react/addons'),
+    { Link } = require('react-router'),
+    { PropTypes } = React;
 
 var User = React.createClass({
-  mixins: [createStoreMixin(UserStore), PureRenderMixin],
+  mixins: [PureRenderMixin],
 
   propTypes: {
-    login: PropTypes.string.isRequired
-  },
-
-  getStateFromStores() {
-    return {
-      user: UserStore.get(this.props.login)
-    };
+    user: PropTypes.object.isRequired
   },
 
   render() {
-    var user = this.state.user;
-    if (!user) {
-      return <span>Loading {this.props.login}...</span>;
-    }
+    var { user } = this.props;
 
     return (
       <div className='User'>
-        <Link to='user' login={user.login}>
+        <Link to='user' params={{login: user.login}}>
           <img src={user.avatarUrl} width='72' height='72' />
           <h3>
             {user.login} {user.name && <span>({user.name})</span>}

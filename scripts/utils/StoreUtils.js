@@ -1,10 +1,10 @@
 'use strict';
 
-var EventEmitter = require('events').EventEmitter,
+var _ = require('underscore'),
+    EventEmitter = require('events').EventEmitter,
     merge = require('react/lib/merge'),
-    shallowEqual = require('react/lib/shallowEqual');
-
-var CHANGE_EVENT = 'change';
+    shallowEqual = require('react/lib/shallowEqual'),
+    CHANGE_EVENT = 'change';
 
 var StoreUtils = {
   createStore(spec) {
@@ -22,23 +22,27 @@ var StoreUtils = {
       }
     }));
 
-    // Mute the warning because Stores will have a lot of subscribers
-    store.setMaxListeners(0);
+    _.each(store, function (val, key) {
+      if (_.isFunction(val)) {
+        store[key] = store[key].bind(store);
+      }
+    });
 
+    store.setMaxListeners(0);
     return store;
   },
 
   isInBag(bag, id, fields) {
-    if (!fields) {
-      fields = [];
-    }
-
     var item = bag[id];
     if (!bag[id]) {
-      return;
+      return false;
     }
 
-    return fields.every(field => item.hasOwnProperty(field));
+    if (fields) {
+      return fields.every(field => item.hasOwnProperty(field));
+    } else {
+      return true;
+    }
   },
 
   mergeIntoBag(bag, entities, transform) {

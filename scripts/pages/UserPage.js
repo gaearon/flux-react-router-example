@@ -6,12 +6,14 @@ var React = require('react'),
     Repo = require('../components/Repo'),
     RepoActionCreators = require('../actions/RepoActionCreators'),
     UserActionCreators = require('../actions/UserActionCreators'),
-    StarredRepoStore = require('../stores/StarredRepoStore'),
+    StarredReposByUserStore = require('../stores/StarredReposByUserStore'),
+    RepoStore = require('../stores/RepoStore'),
+    UserStore = require('../stores/UserStore'),
     createStoreMixin = require('../mixins/createStoreMixin'),
     PropTypes = React.PropTypes;
 
 var UserPage = React.createClass({
-  mixins: [createStoreMixin(StarredRepoStore)],
+  mixins: [createStoreMixin(UserStore, StarredReposByUserStore, RepoStore)],
 
   propTypes: {
     params: PropTypes.shape({
@@ -19,46 +21,70 @@ var UserPage = React.createClass({
     }).isRequired
   },
 
-  getLogin() {
-    return this.props.params.login;
+  parseLogin(props) {
+    props = props || this.props;
+    return props.params.login;
   },
 
-  getStateFromStores() {
+  getStateFromStores(props) {
+    var userLogin = this.parseLogin(props),
+        user = UserStore.get(userLogin),
+        starred = StarredReposByUserStore.getRepos(userLogin),
+        starredOwners = starred.map(repo => UserStore.get(repo.owner));
+
     return {
-      starred: StarredRepoStore.getAllFor(this.getLogin())
+      user: user,
+      starred: starred,
+      starredOwners: starredOwners
     };
   },
 
   componentDidMount() {
-    UserActionCreators.requestUser(this.getLogin(), ['name', 'avatarUrl']);
-    this.requestStarredPage(true);
+    this.userDidChange();
+  },
+
+  componentWillReceiveProps(nextProps) {
+    if (this.parseLogin(nextProps) !== this.parseLogin(this.props)) {
+      this.setState(this.getStateFromStores(nextProps));
+      this.userDidChange(nextProps);
+    }
+  },
+
+  userDidChange(props) {
+    var userLogin = this.parseLogin(props);
+
+    UserActionCreators.requestUser(userLogin, ['name', 'avatarUrl']);
+    RepoActionCreators.requestStarredReposPage(userLogin, true);
   },
 
   render() {
+    var { user, starredRepos } = this.state;
+
     return (
       <div>
-        <User login={this.getLogin()} />
+        {user ?
+          <User user={user} /> :
+          <h1>Loading...</h1>
+        }
 
         <h1>Starred repos</h1>
-
-        {this.state.starred ?
-          this.renderStarredRepos() :
-          <i>Loading...</i>
-        }
+        {this.renderStarredRepos()}
       </div>
     );
   },
 
   renderStarredRepos() {
-    var login = this.getLogin(),
-        isFetching = StarredRepoStore.isFetchingFor(login),
+    var userLogin = this.parseLogin(),
         isEmpty = this.state.starred.length === 0,
-        mayHaveMore = StarredRepoStore.mayHaveNextPageFor(login);
+        isFetching = StarredReposByUserStore.isExpectingPage(userLogin),
+        isLastPage = StarredReposByUserStore.isLastPage(userLogin);
 
     return (
       <div>
-        {this.state.starred.map(fullName =>
-          <Repo key={fullName} fullName={fullName} />
+        {this.state.starred.map((repo, index) =>
+          <Repo key={repo.fullName}
+                repo={repo}
+                owner={this.state.starredOwners[index]} />
         )}
 
         {isEmpty && !isFetching &&
@@ -69,7 +95,7 @@ var UserPage = React.createClass({
           <span>Loading...</span>
         }
 
-        {!isEmpty && (isFetching || mayHaveMore) &&
+        {!isEmpty && (isFetching || !isLastPage) &&
           <button onClick={this.handleLoadMoreClick} disabled={isFetching}>
             {isFetching ? 'Loading...' : 'Load more'}
           </button>
@@ -79,11 +105,7 @@ var UserPage = React.createClass({
   },
 
   handleLoadMoreClick() {
-    this.requestStarredPage();
-  },
-
-  requestStarredPage(isInitialRequest) {
-    RepoActionCreators.requestStarredReposPage(this.getLogin(), isInitialRequest);
+    RepoActionCreators.requestStarredReposPage(this.parseLogin());
   }
 });
 

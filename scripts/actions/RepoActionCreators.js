@@ -3,7 +3,7 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher'),
     ActionTypes = require('../constants/ActionTypes'),
     RepoAPI = require('../utils/RepoAPI'),
-    StarredRepoStore = require('../stores/StarredRepoStore'),
+    StarredReposByUserStore = require('../stores/StarredReposByUserStore'),
     RepoStore = require('../stores/RepoStore');
 
 var RepoActionCreators = {
@@ -21,12 +21,12 @@ var RepoActionCreators = {
   },
 
   requestStarredReposPage(login, isInitialRequest) {
-    if (StarredRepoStore.isFetchingFor(login) ||
-       !StarredRepoStore.mayHaveNextPageFor(login)) {
+    if (StarredReposByUserStore.isExpectingPage(login) ||
+        StarredReposByUserStore.isLastPage(login)) {
       return;
     }
 
-    if (isInitialRequest && StarredRepoStore.hasRequestedFor(login)) {
+    if (isInitialRequest && StarredReposByUserStore.getPageCount(login) > 0) {
       return;
     }
 
@@ -35,7 +35,7 @@ var RepoActionCreators = {
       login: login
     });
 
-    var nextPageUrl = StarredRepoStore.getNextPageUrlFor(login);
+    var nextPageUrl = StarredReposByUserStore.getNextPageUrl(login);
     RepoAPI.requestStarredReposPage(login, nextPageUrl);
   }
 };

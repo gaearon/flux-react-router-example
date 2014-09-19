@@ -1,6 +1,6 @@
 'use strict';
 
-var Dispatcher = require('./Dispatcher'),
+var Dispatcher = require('flux').Dispatcher,
     copyProperties = require('react/lib/copyProperties'),
     PayloadSources = require('../constants/PayloadSources');
 

@@ -4,7 +4,7 @@ var AppDispatcher = require('../dispatcher/AppDispatcher'),
     ActionTypes = require('../constants/ActionTypes'),
     UserAPI = require('../utils/UserAPI'),
     UserStore = require('../stores/UserStore'),
-    StargazerUserStore = require('../stores/StargazerUserStore');
+    StargazersByRepoStore = require('../stores/StargazersByRepoStore');
 
 var UserActionCreators = {
   requestUser(login, fields) {
@@ -21,12 +21,12 @@ var UserActionCreators = {
   },
 
   requestStargazerPage(fullName, isInitialRequest) {
-    if (StargazerUserStore.isFetchingFor(fullName) ||
-       !StargazerUserStore.mayHaveNextPageFor(fullName)) {
+    if (StargazersByRepoStore.isExpectingPage(fullName) ||
+        StargazersByRepoStore.isLastPage(fullName)) {
       return;
     }
 
-    if (isInitialRequest && StargazerUserStore.hasRequestedFor(fullName)) {
+    if (isInitialRequest && StargazersByRepoStore.getPageCount(fullName) > 0) {
       return;
     }
 
@@ -35,7 +35,7 @@ var UserActionCreators = {
       fullName: fullName
     });
 
-    var nextPageUrl = StargazerUserStore.getNextPageUrlFor(fullName);
+    var nextPageUrl = StargazersByRepoStore.getNextPageUrl(fullName);
     UserAPI.requestStargazerPage(fullName, nextPageUrl);
   }
 };

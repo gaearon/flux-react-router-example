@@ -1,22 +1,18 @@
 'use strict';
 
-var AppDispatcher = require('../dispatcher/AppDispatcher');
+var AppDispatcher = require('../dispatcher/AppDispatcher'),
+    UserStore = require('./UserStore'),
+    { createStore, mergeIntoBag, isInBag } = require('../utils/StoreUtils');
 
-var {
-  createStore,
-  mergeIntoBag,
-  isInBag
-} = require('../utils/StoreUtils');
-
-var repos = {};
+var _repos = {};
 
 var RepoStore = createStore({
   contains(fullName, fields) {
-    return isInBag(repos, fullName, fields);
+    return isInBag(_repos, fullName, fields);
   },
 
   get(fullName) {
-    return repos[fullName];
+    return _repos[fullName];
   }
 });
 
@@ -27,7 +23,7 @@ RepoStore.dispatchToken = AppDispatcher.register(function (payload) {
       fetchedRepos = entities && entities.repos;
 
   if (fetchedRepos) {
-    mergeIntoBag(repos, fetchedRepos);
+    mergeIntoBag(_repos, fetchedRepos);
     RepoStore.emitChange();
   }
 });
