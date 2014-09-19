@@ -88,8 +88,7 @@ function createListActionHandler(actions) {
   var {
     request: requestAction,
     error: errorAction,
-    success: successAction,
-    preload: preloadAction
+    success: successAction
   } = actions;
 
   invariant(requestAction, 'Pass a valid request action.');
