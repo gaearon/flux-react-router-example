@@ -16,7 +16,8 @@ There are a few bits here I was especially interested in:
 * It supports pagination both for users and repos;
 * It parses Github's nested JSON responses with [normalizr](https://github.com/gaearon/normalizr);
 * Content Stores [don't need to contain a giant `switch` with actions](https://github.com/gaearon/flux-react-router-example/blob/master/scripts/stores/UserStore.js#L25);
-* “Back” is immediate (because all data is in Stores).
+* “Back” is immediate (because all data is in Stores);
+* Router handlers are updated gracefully in `componentWillReceiveProps` if some page is requested with a different parameter.
 
 ### Running
 
