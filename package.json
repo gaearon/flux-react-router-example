@@ -1,6 +1,6 @@
 {
   "name": "flux-react-router-example",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A sample app featuring Flux and React Router",
   "dependencies": {
     "flux": "^2.0.1",
