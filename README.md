@@ -211,7 +211,7 @@ class PaginatedList {
 ```
 
 ### [`PaginatedStoreUtils`](https://github.com/gaearon/flux-react-router-example/blob/master/scripts/utils/PaginatedStoreUtils.js)
-#### `createIndexedPaginatedStore`
+#### `createListStore`, `createIndexedListStore`, `createListActionHandler`
 
 Makes creation of Indexed List Stores as simple as possible by providing boilerplate methods and action handling:
 
@@ -298,8 +298,7 @@ function createListActionHandler(actions) {
   var {
     request: requestAction,
     error: errorAction,
-    success: successAction,
-    preload: preloadAction
+    success: successAction
   } = actions;
 
   invariant(requestAction, 'Pass a valid request action.');
