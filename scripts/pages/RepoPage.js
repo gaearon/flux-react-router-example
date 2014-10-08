@@ -10,6 +10,7 @@ var React = require('react'),
     UserStore = require('../stores/UserStore'),
     RepoStore = require('../stores/RepoStore'),
     createStoreMixin = require('../mixins/createStoreMixin'),
+    DocumentTitle = require('react-document-title'),
     PropTypes = React.PropTypes;
 
 var RepoPage = React.createClass({
@@ -62,15 +63,17 @@ var RepoPage = React.createClass({
     var { repo, owner } = this.state;
 
     return (
-      <div>
-        {repo && owner ?
-          <Repo repo={repo} owner={owner} /> :
-          <h1>Loading {this.parseFullName()}...</h1>
-        }
+      <DocumentTitle title={'Stargazers of ' + this.parseFullName()}>
+        <div>
+          {repo && owner ?
+            <Repo repo={repo} owner={owner} /> :
+            <h1>Loading {this.parseFullName()}...</h1>
+          }
 
-        <h1>Stargazers</h1>
-        {this.renderStargazers()}
-      </div>
+          <h1>Stargazers</h1>
+          {this.renderStargazers()}
+        </div>
+      </DocumentTitle>
     );
   },
 

@@ -10,6 +10,7 @@ var React = require('react'),
     RepoStore = require('../stores/RepoStore'),
     UserStore = require('../stores/UserStore'),
     createStoreMixin = require('../mixins/createStoreMixin'),
+    DocumentTitle = require('react-document-title'),
     PropTypes = React.PropTypes;
 
 var UserPage = React.createClass({
@@ -61,15 +62,17 @@ var UserPage = React.createClass({
     var { user, starredRepos } = this.state;
 
     return (
-      <div>
-        {user ?
-          <User user={user} /> :
-          <h1>Loading...</h1>
-        }
+      <DocumentTitle title={'Starred by ' + this.parseLogin()}>
+        <div>
+          {user ?
+            <User user={user} /> :
+            <h1>Loading...</h1>
+          }
 
-        <h1>Starred repos</h1>
-        {this.renderStarredRepos()}
-      </div>
+          <h1>Starred repos</h1>
+          {this.renderStarredRepos()}
+        </div>
+      </DocumentTitle>
     );
   },
 
