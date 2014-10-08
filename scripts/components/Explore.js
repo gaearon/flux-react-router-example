@@ -3,10 +3,10 @@
 
 var React = require('react'),
     LinkedStateMixin = require('react/lib/LinkedStateMixin'),
-    { transitionTo } = require('react-router');
+    { Navigation } = require('react-router');
 
 var Explore = React.createClass({
-  mixins: [LinkedStateMixin],
+  mixins: [LinkedStateMixin, Navigation],
 
   getInitialState() {
     return {
@@ -33,7 +33,7 @@ var Explore = React.createClass({
   },
 
   handleGoClick() {
-    transitionTo('/' + this.state.loginOrRepo);
+    this.transitionTo('/' + this.state.loginOrRepo);
   }
 });
 
