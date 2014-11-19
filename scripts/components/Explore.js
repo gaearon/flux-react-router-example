@@ -21,6 +21,7 @@ var Explore = React.createClass({
                valueLink={this.linkState('loginOrRepo')}
                onKeyUp={this.handleKeyUp} />
         <button onClick={this.handleGoClick}>Go!</button>
+        <p>Code on <a href='https://github.com/gaearon/flux-react-router-example' target='_blank'>Github</a>.</p>
       </div>
     );
   },
