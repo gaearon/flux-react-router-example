@@ -1,10 +1,10 @@
 'use strict';
 
 var Dispatcher = require('flux').Dispatcher,
-    copyProperties = require('react/lib/copyProperties'),
-    PayloadSources = require('../constants/PayloadSources');
+    PayloadSources = require('../constants/PayloadSources'),
+    assign = require('object-assign');
 
-var AppDispatcher = copyProperties(new Dispatcher(), {
+var AppDispatcher = assign(new Dispatcher(), {
   handleServerAction(action) {
     console.log('server action', action);
 

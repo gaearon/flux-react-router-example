@@ -6,7 +6,7 @@ var humps = require('humps'),
     Schema = normalizr.Schema,
     arrayOf = normalizr.arrayOf,
     normalize = normalizr.normalize,
-    merge = require('react/lib/merge'),
+    assign = require('object-assign'),
     superagent = require('superagent');
 
 var API_ROOT = 'https://api.github.com/';
@@ -44,28 +44,28 @@ var APIUtils = {
   },
 
   normalizeUserResponse(response) {
-    return merge(
+    return assign(
       normalize(camelizeKeys(response.body), user),
       APIUtils.extractPagination(response)
     );
   },
 
   normalizeUserArrayResponse(response) {
-    return merge(
+    return assign(
       normalize(camelizeKeys(response.body), arrayOf(user)),
       APIUtils.extractPagination(response)
     );
   },
 
   normalizeRepoResponse(response) {
-    return merge(
+    return assign(
       normalize(camelizeKeys(response.body), repo),
       APIUtils.extractPagination(response)
     );
   },
 
   normalizeRepoArrayResponse(response) {
-    return merge(
+    return assign(
       normalize(camelizeKeys(response.body), arrayOf(repo)),
       APIUtils.extractPagination(response)
     );

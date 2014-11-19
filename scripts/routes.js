@@ -1,9 +1,7 @@
-/** @jsx React.DOM */
 'use strict';
 
-var Routes = require('react-router').Routes,
-    Route = require('react-router').Route,
-    DefaultRoute = require('react-router').DefaultRoute,
+var React = require('react'),
+    { Routes, Route, DefaultRoute } = require('react-router'),
     App = require('./App'),
     RepoPage = require('./pages/RepoPage'),
     UserPage = require('./pages/UserPage');

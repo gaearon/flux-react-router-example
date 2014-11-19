@@ -3,7 +3,7 @@
 var StoreUtils = require('./StoreUtils'),
     PaginatedList = require('../utils/PaginatedList'),
     invariant = require('react/lib/invariant'),
-    merge = require('react/lib/merge'),
+    assign = require('object-assign'),
     createStore = StoreUtils.createStore;
 
 var PROXIED_PAGINATED_LIST_METHODS = [
@@ -40,10 +40,10 @@ function createListStore(spec) {
   }
 
   return createStore(
-    merge(spec, createListStoreSpec({
+    assign(createListStoreSpec({
       getList: getList,
       callListMethod: callListMethod
-    }))
+    }), spec)
   );
 }
 
@@ -74,10 +74,10 @@ function createIndexedListStore(spec) {
   }
 
   return createStore(
-    merge(spec, createListStoreSpec({
+    assign(createListStoreSpec({
       getList: getList,
       callListMethod: callListMethod
-    }))
+    }), spec)
   );
 }
 

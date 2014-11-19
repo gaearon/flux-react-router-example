@@ -1,14 +1,14 @@
 'use strict';
 
 var _ = require('underscore'),
-    EventEmitter = require('events').EventEmitter,
-    merge = require('react/lib/merge'),
+    { EventEmitter } = require('events'),
+    assign = require('object-assign'),
     shallowEqual = require('react/lib/shallowEqual'),
     CHANGE_EVENT = 'change';
 
 var StoreUtils = {
   createStore(spec) {
-    var store = merge(EventEmitter.prototype, merge(spec, {
+    var store = assign({
       emitChange() {
         this.emit(CHANGE_EVENT);
       },
@@ -20,7 +20,7 @@ var StoreUtils = {
       removeChangeListener(callback) {
         this.removeListener(CHANGE_EVENT, callback);
       }
-    }));
+    }, spec, EventEmitter.prototype);
 
     _.each(store, function (val, key) {
       if (_.isFunction(val)) {
@@ -58,7 +58,7 @@ var StoreUtils = {
       if (!bag.hasOwnProperty(key)) {
         bag[key] = transform(entities[key]);
       } else if (!shallowEqual(bag[key], entities[key])) {
-        bag[key] = transform(merge(bag[key], entities[key]));
+        bag[key] = transform(assign({}, bag[key], entities[key]));
       }
     }
   }
