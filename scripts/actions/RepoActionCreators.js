@@ -11,6 +11,10 @@ var RepoActionCreators = {
     if (RepoStore.contains(fullName, fields)) {
       return;
     }
+    
+    // Although this action is currently not handled by any store,
+    // it is fired for consistency. You might want to use it later,
+    // e.g. to show a spinner or have a more detailed log.
 
     AppDispatcher.handleViewAction({
       type: ActionTypes.REQUEST_REPO,
