@@ -10,7 +10,7 @@ var React = require('react'),
     RepoStore = require('../stores/RepoStore'),
     createStoreMixin = require('../mixins/createStoreMixin'),
     DocumentTitle = require('react-document-title'),
-    PropTypes = React.PropTypes;
+    { PropTypes } = React;
 
 var RepoPage = React.createClass({
   mixins: [createStoreMixin(RepoStore, StargazersByRepoStore, UserStore)],

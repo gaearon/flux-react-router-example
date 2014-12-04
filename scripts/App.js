@@ -3,11 +3,13 @@
 var React = require('react'),
     Explore = require('./components/Explore'),
     DocumentTitle = require('react-document-title'),
+    { RouteHandler } = require('react-router'),
     { PropTypes } = React;
 
 var App = React.createClass({
   propTypes: {
-    activeRouteHandler: PropTypes.func
+    params: PropTypes.object.isRequired,
+    query: PropTypes.object.isRequired
   },
 
   render() {
@@ -16,7 +18,7 @@ var App = React.createClass({
         <div className='App'>
           <Explore />
           <hr />
-          <this.props.activeRouteHandler />
+          <RouteHandler {...this.props} />
         </div>
       </DocumentTitle>
     );

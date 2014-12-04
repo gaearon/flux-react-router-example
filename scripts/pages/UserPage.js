@@ -10,7 +10,7 @@ var React = require('react'),
     UserStore = require('../stores/UserStore'),
     createStoreMixin = require('../mixins/createStoreMixin'),
     DocumentTitle = require('react-document-title'),
-    PropTypes = React.PropTypes;
+    { PropTypes } = React;
 
 var UserPage = React.createClass({
   mixins: [createStoreMixin(UserStore, StarredReposByUserStore, RepoStore)],

@@ -1,6 +1,8 @@
 'use strict';
 
 var React = require('react'),
-    routes = require('./routes');
+    router = require('./router');
 
-React.render(routes, document.body);
+router.run((Handler, state) => {
+  React.render(<Handler {...state} />, document.body);
+});
