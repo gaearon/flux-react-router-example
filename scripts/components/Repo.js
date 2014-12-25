@@ -1,7 +1,6 @@
 'use strict';
 
 var React = require('react'),
-    createStoreMixin = require('../mixins/createStoreMixin'),
     { PureRenderMixin } = require('react/addons'),
     { Link } = require('react-router'),
     { PropTypes } = React;
