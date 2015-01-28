@@ -53,14 +53,17 @@ function createListStore(spec) {
  * to store methods.
  */
 function createIndexedListStore(spec) {
-  var lists = {};
+  var lists = {},
+      prefix = 'ID_';
 
   function getList(id) {
-    if (!lists[id]) {
-      lists[id] = new PaginatedList();
+    var key = prefix + id;
+
+    if (!lists[key]) {
+      lists[key] = new PaginatedList();
     }
 
-    return lists[id];
+    return lists[key];
   }
 
   function callListMethod(method, args) {
