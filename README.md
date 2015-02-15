@@ -1,4 +1,4 @@
-flux-react-router-example
+Flux React Router Example
 =========================
 
 This is a sample Flux app I wrote on a weekend.  
