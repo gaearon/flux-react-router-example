@@ -1,10 +1,10 @@
 'use strict';
 
-var React = require('react'),
-    LinkedStateMixin = require('react/lib/LinkedStateMixin'),
-    { Navigation } = require('react-router');
+import React from 'react';
+import LinkedStateMixin from 'react/lib/LinkedStateMixin';
+import { Navigation } from 'react-router';
 
-var Explore = React.createClass({
+const Explore = React.createClass({
   mixins: [LinkedStateMixin, Navigation],
 
   getInitialState() {
@@ -36,4 +36,4 @@ var Explore = React.createClass({
   }
 });
 
-module.exports = Explore;
+export default Explore;

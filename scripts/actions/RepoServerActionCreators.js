@@ -1,9 +1,9 @@
 'use strict';
 
-var AppDispatcher = require('../dispatcher/AppDispatcher'),
-    ActionTypes = require('../constants/ActionTypes');
+import AppDispatcher from '../dispatcher/AppDispatcher';
+import ActionTypes from '../constants/ActionTypes';
 
-var RepoServerActionCreators = {
+export default {
   handleRepoSuccess(response) {
     AppDispatcher.handleServerAction({
       type: ActionTypes.REQUEST_REPO_SUCCESS,
@@ -22,8 +22,8 @@ var RepoServerActionCreators = {
   handleStarredReposPageSuccess(login, response) {
     AppDispatcher.handleServerAction({
       type: ActionTypes.REQUEST_STARRED_REPOS_PAGE_SUCCESS,
-      login: login,
-      response: response
+      login,
+      response
     });
   },
 
@@ -32,9 +32,7 @@ var RepoServerActionCreators = {
 
     AppDispatcher.handleServerAction({
       type: ActionTypes.REQUEST_STARRED_REPOS_PAGE_ERROR,
-      login: login
+      login
     });
   }
 };
-
-module.exports = RepoServerActionCreators;

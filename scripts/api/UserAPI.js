@@ -1,28 +1,27 @@
 'use strict';
 
-var UserServerActionCreators = require('../actions/UserServerActionCreators');
-
-var {
+import UserServerActionCreators from '../actions/UserServerActionCreators';
+import {
   request,
   normalizeUserResponse,
   normalizeUserArrayResponse
-} = require('./APIUtils');
+} from '../utils/APIUtils';
 
-var UserAPI = {
+export default {
   requestUser(login) {
-    request('users/' + login).end(function (res) {
+    request(`users/${login}`).end(function (res) {
       if (!res.ok) {
         UserServerActionCreators.handleUserError(res.text);
         return;
       }
 
-      var response = normalizeUserResponse(res);
+      const response = normalizeUserResponse(res);
       UserServerActionCreators.handleUserSuccess(response);
     });
   },
 
   requestStargazerPage(fullName, serverSuppliedUrl) {
-    var url = serverSuppliedUrl || 'repos/' + fullName + '/stargazers';
+    const url = serverSuppliedUrl || `repos/${fullName}/stargazers`;
 
     request(url).end(function (res) {
       if (!res.ok) {
@@ -30,10 +29,8 @@ var UserAPI = {
         return;
       }
 
-      var response = normalizeUserArrayResponse(res);
+      const response = normalizeUserArrayResponse(res);
       UserServerActionCreators.handleStargazerPageSuccess(fullName, response);
     });
   }
 };
-
-module.exports = UserAPI;

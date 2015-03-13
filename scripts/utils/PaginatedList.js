@@ -1,9 +1,9 @@
 'use strict';
 
-var _ = require('underscore'),
-    invariant = require('react/lib/invariant');
+import { union, without } from 'underscore';
+import invariant from 'react/lib/invariant';
 
-class PaginatedList {
+export default class PaginatedList {
   constructor(ids) {
     this._ids = ids || [];
     this._pageCount = 0;
@@ -32,11 +32,11 @@ class PaginatedList {
   }
 
   prepend(id) {
-    this._ids = _.union([id], this._ids);
+    this._ids = union([id], this._ids);
   }
 
   remove(id) {
-    this._ids = _.without(this._ids, id);
+    this._ids = without(this._ids, id);
   }
 
   expectPage() {
@@ -53,13 +53,11 @@ class PaginatedList {
     invariant(this._isExpectingPage, 'Cannot call receivePage without prior expectPage call.');
 
     if (newIds.length) {
-      this._ids = _.union(this._ids, newIds);
+      this._ids = union(this._ids, newIds);
     }
 
     this._isExpectingPage = false;
     this._nextPageUrl = nextPageUrl || null;
     this._pageCount++;
   }
-}
-
-module.exports = PaginatedList;
+};

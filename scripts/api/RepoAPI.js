@@ -1,28 +1,27 @@
 'use strict';
 
-var RepoServerActionCreators = require('../actions/RepoServerActionCreators');
-
-var {
+import RepoServerActionCreators from '../actions/RepoServerActionCreators';
+import {
   request,
   normalizeRepoResponse,
   normalizeRepoArrayResponse
-} = require('./APIUtils');
+} from '../utils/APIUtils';
 
-var RepoAPI = {
+export default {
   requestRepo(fullName) {
-    request('repos/' + fullName).end(function (res) {
+    request(`repos/${fullName}`).end(function (res) {
       if (!res.ok) {
         RepoServerActionCreators.handleRepoError(res.text);
         return;
       }
 
-      var response = normalizeRepoResponse(res);
+      const response = normalizeRepoResponse(res);
       RepoServerActionCreators.handleRepoSuccess(response);
     });
   },
 
   requestStarredReposPage(login, serverSuppliedUrl) {
-    var url = serverSuppliedUrl || 'users/' + login + '/starred';
+    const url = serverSuppliedUrl || `users/${login}/starred`;
 
     request(url).end(function (res) {
       if (!res.ok) {
@@ -30,10 +29,8 @@ var RepoAPI = {
         return;
       }
 
-      var response = normalizeRepoArrayResponse(res);
+      const response = normalizeRepoArrayResponse(res);
       RepoServerActionCreators.handleStarredReposPageSuccess(login, response);
     });
   }
 };
-
-module.exports = RepoAPI;

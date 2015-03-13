@@ -1,12 +1,12 @@
 'use strict';
 
-var AppDispatcher = require('../dispatcher/AppDispatcher'),
-    ActionTypes = require('../constants/ActionTypes'),
-    UserAPI = require('../utils/UserAPI'),
-    UserStore = require('../stores/UserStore'),
-    StargazersByRepoStore = require('../stores/StargazersByRepoStore');
+import AppDispatcher from '../dispatcher/AppDispatcher';
+import ActionTypes from '../constants/ActionTypes';
+import UserAPI from '../api/UserAPI';
+import UserStore from '../stores/UserStore';
+import StargazersByRepoStore from '../stores/StargazersByRepoStore';
 
-var UserActionCreators = {
+export default {
   requestUser(login, fields) {
     if (UserStore.contains(login, fields)) {
       return;
@@ -18,7 +18,7 @@ var UserActionCreators = {
 
     AppDispatcher.handleViewAction({
       type: ActionTypes.REQUEST_USER,
-      login: login
+      login
     });
 
     UserAPI.requestUser(login);
@@ -36,12 +36,10 @@ var UserActionCreators = {
 
     AppDispatcher.handleViewAction({
       type: ActionTypes.REQUEST_STARGAZER_PAGE,
-      fullName: fullName
+      fullName
     });
 
-    var nextPageUrl = StargazersByRepoStore.getNextPageUrl(fullName);
+    const nextPageUrl = StargazersByRepoStore.getNextPageUrl(fullName);
     UserAPI.requestStargazerPage(fullName, nextPageUrl);
   }
 };
-
-module.exports = UserActionCreators;

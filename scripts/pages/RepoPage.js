@@ -1,43 +1,30 @@
 'use strict';
 
-var React = require('react'),
-    Repo = require('../components/Repo'),
-    User = require('../components/User'),
-    RepoActionCreators = require('../actions/RepoActionCreators'),
-    UserActionCreators = require('../actions/UserActionCreators'),
-    StargazersByRepoStore = require('../stores/StargazersByRepoStore'),
-    UserStore = require('../stores/UserStore'),
-    RepoStore = require('../stores/RepoStore'),
-    createStoreMixin = require('../mixins/createStoreMixin'),
-    DocumentTitle = require('react-document-title'),
-    { PropTypes } = React;
+import React, { PropTypes } from 'react';
+import Repo from '../components/Repo';
+import User from '../components/User';
+import RepoActionCreators from '../actions/RepoActionCreators';
+import UserActionCreators from '../actions/UserActionCreators';
+import StargazersByRepoStore from '../stores/StargazersByRepoStore';
+import UserStore from '../stores/UserStore';
+import RepoStore from '../stores/RepoStore';
+import DocumentTitle from 'react-document-title';
+import connectToStores from '../utils/connectToStores';
 
-var RepoPage = React.createClass({
-  mixins: [createStoreMixin(RepoStore, StargazersByRepoStore, UserStore)],
+function parseFullName(params) {
+  return params.login + '/' + params.name;
+}
 
+let RepoPage = React.createClass({
   propTypes: {
     params: PropTypes.shape({
       login: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired
-    }).isRequired
-  },
+    }).isRequired,
 
-  parseFullName(props) {
-    props = props || this.props;
-    return props.params.login + '/' + props.params.name;
-  },
-
-  getStateFromStores(props) {
-    var repoFullName = this.parseFullName(props),
-        stargazers = StargazersByRepoStore.getUsers(repoFullName),
-        repo = RepoStore.get(repoFullName),
-        owner = repo && UserStore.get(repo.owner);
-
-    return {
-      repo: repo,
-      owner: owner,
-      stargazers: stargazers
-    };
+    repo: PropTypes.object,
+    owner: PropTypes.object,
+    stargazers: PropTypes.arrayOf(PropTypes.object).isRequired
   },
 
   componentDidMount() {
@@ -45,28 +32,28 @@ var RepoPage = React.createClass({
   },
 
   componentWillReceiveProps(nextProps) {
-    if (this.parseFullName(nextProps) !== this.parseFullName(this.props)) {
-      this.setState(this.getStateFromStores(nextProps));
+    if (parseFullName(nextProps.params) !== parseFullName(this.props.params)) {
       this.repoDidChange(nextProps);
     }
   },
 
   repoDidChange(props) {
-    var fullName = this.parseFullName(props);
+    const fullName = parseFullName(props.params);
 
     RepoActionCreators.requestRepo(fullName);
     UserActionCreators.requestStargazerPage(fullName, true);
   },
 
   render() {
-    var { repo, owner } = this.state;
+    const { repo, owner, params } = this.props;
+    const fullName = parseFullName(params);
 
     return (
-      <DocumentTitle title={'Stargazers of ' + this.parseFullName()}>
+      <DocumentTitle title={`Stargazers of ${fullName}`}>
         <div>
           {repo && owner ?
             <Repo repo={repo} owner={owner} /> :
-            <h1>Loading {this.parseFullName()}...</h1>
+            <h1>Loading {fullName}...</h1>
           }
 
           <h1>Stargazers</h1>
@@ -77,14 +64,16 @@ var RepoPage = React.createClass({
   },
 
   renderStargazers() {
-    var fullName = this.parseFullName(),
-        isEmpty = this.state.stargazers.length === 0,
-        isFetching = StargazersByRepoStore.isExpectingPage(fullName),
-        isLastPage = StargazersByRepoStore.isLastPage(fullName);
+    const { stargazers } = this.props;
+    const fullName = parseFullName(this.props);
+
+    const isEmpty = stargazers.length === 0;
+    const isFetching = StargazersByRepoStore.isExpectingPage(fullName);
+    const isLastPage = StargazersByRepoStore.isLastPage(fullName);
 
     return (
       <div>
-        {this.state.stargazers.map(user =>
+        {stargazers.map(user =>
           <User key={user.login} user={user} />
         )}
 
@@ -106,8 +95,33 @@ var RepoPage = React.createClass({
   },
 
   handleLoadMoreClick() {
-    UserActionCreators.requestStargazerPage(this.parseFullName());
+    const fullName = parseFullName(this.props.params);
+    UserActionCreators.requestStargazerPage(fullName);
   }
 });
 
-module.exports = RepoPage;
+if (module.makeHot) {
+  // Because we don't export RepoPage directly,
+  // we need to tell React Hot Loader about it,
+  // or the state will be lost on file change.
+  RepoPage = module.makeHot(RepoPage);
+}
+
+function pickProps({ params }) {
+  return { params };
+}
+
+function getState({ params }) {
+  const repoFullName = parseFullName(params);
+  const stargazers = StargazersByRepoStore.getUsers(repoFullName);
+  const repo = RepoStore.get(repoFullName);
+  const owner = repo && UserStore.get(repo.owner);
+
+  return { repo, owner, stargazers };
+}
+
+export default connectToStores(RepoPage,
+  [RepoStore, StargazersByRepoStore, UserStore],
+  pickProps,
+  getState
+);

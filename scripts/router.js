@@ -1,11 +1,9 @@
 'use strict';
 
-var { create: createRouter, HistoryLocation, HashLocation } = require('react-router'),
-    routes = require('./routes');
+import { create as createRouter, HistoryLocation, HashLocation } from 'react-router';
+import routes from './routes';
 
-var router = createRouter({
+export default createRouter({
   location: process.env.NODE_ENV === 'production' ? HashLocation : HistoryLocation,
   routes: routes
 });
-
-module.exports = router;

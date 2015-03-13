@@ -1,12 +1,12 @@
 'use strict';
 
-var React = require('react'),
-    { Route, DefaultRoute } = require('react-router'),
-    App = require('./App'),
-    RepoPage = require('./pages/RepoPage'),
-    UserPage = require('./pages/UserPage');
+import React from 'react';
+import { Route } from 'react-router';
+import App from './App';
+import RepoPage from './pages/RepoPage';
+import UserPage from './pages/UserPage';
 
-module.exports = (
+export default (
   <Route name='explore' path='/' handler={App}>
     <Route name='repo' path='/:login/:name' handler={RepoPage} />
     <Route name='user' path='/:login' handler={UserPage} />
