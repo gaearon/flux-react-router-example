@@ -80,8 +80,8 @@ I made a few helpers though.
 This method gives you the most basic Store:
 
 ```javascript
-createStore(spec) {
-  var store = merge(EventEmitter.prototype, merge(spec, {
+export function createStore(spec) {
+  var store = assign({
     emitChange() {
       this.emit(CHANGE_EVENT);
     },
@@ -93,10 +93,10 @@ createStore(spec) {
     removeChangeListener(callback) {
       this.removeListener(CHANGE_EVENT, callback);
     }
-  }));
+  }, spec, EventEmitter.prototype);
 
-  _.each(store, function (val, key) {
-    if (_.isFunction(val)) {
+  each(store, function (val, key) {
+    if (isFunction(val)) {
       store[key] = store[key].bind(store);
     }
   });
@@ -113,7 +113,7 @@ I use it to create all Stores.
 Small helpers useful for Content Stores.
 
 ```javascript
-isInBag(bag, id, fields) {
+export function isInBag(bag, id, fields) {
   var item = bag[id];
   if (!bag[id]) {
     return false;
@@ -124,9 +124,9 @@ isInBag(bag, id, fields) {
   } else {
     return true;
   }
-},
+}
 
-mergeIntoBag(bag, entities, transform) {
+export function mergeIntoBag(bag, entities, transform) {
   if (!transform) {
     transform = (x) => x;
   }
@@ -139,7 +139,7 @@ mergeIntoBag(bag, entities, transform) {
     if (!bag.hasOwnProperty(key)) {
       bag[key] = transform(entities[key]);
     } else if (!shallowEqual(bag[key], entities[key])) {
-      bag[key] = transform(merge(bag[key], entities[key]));
+      bag[key] = transform(assign({}, bag[key], entities[key]));
     }
   }
 }
@@ -150,7 +150,7 @@ mergeIntoBag(bag, entities, transform) {
 Stores pagination state and enforces certain assertions (can't fetch page while fetching, etc).
 
 ```javascript
-class PaginatedList {
+export default class PaginatedList {
   constructor(ids) {
     this._ids = ids || [];
     this._pageCount = 0;
@@ -179,11 +179,11 @@ class PaginatedList {
   }
 
   prepend(id) {
-    this._ids = _.union([id], this._ids);
+    this._ids = union([id], this._ids);
   }
 
   remove(id) {
-    this._ids = _.without(this._ids, id);
+    this._ids = without(this._ids, id);
   }
 
   expectPage() {
@@ -200,14 +200,14 @@ class PaginatedList {
     invariant(this._isExpectingPage, 'Cannot call receivePage without prior expectPage call.');
 
     if (newIds.length) {
-      this._ids = _.union(this._ids, newIds);
+      this._ids = union(this._ids, newIds);
     }
 
     this._isExpectingPage = false;
     this._nextPageUrl = nextPageUrl || null;
     this._pageCount++;
   }
-}
+};
 ```
 
 ### [`PaginatedStoreUtils`](https://github.com/gaearon/flux-react-router-example/blob/master/scripts/utils/PaginatedStoreUtils.js)
@@ -216,15 +216,13 @@ class PaginatedList {
 Makes creation of Indexed List Stores as simple as possible by providing boilerplate methods and action handling:
 
 ```javascript
-var PROXIED_PAGINATED_LIST_METHODS = [
+const PROXIED_PAGINATED_LIST_METHODS = [
   'getIds', 'getPageCount', 'getNextPageUrl',
   'isExpectingPage', 'isLastPage'
 ];
 
 function createListStoreSpec({ getList, callListMethod }) {
-  var spec = {
-    getList: getList
-  };
+  const spec = { getList };
 
   PROXIED_PAGINATED_LIST_METHODS.forEach(method => {
     spec[method] = function (...args) {
@@ -238,8 +236,8 @@ function createListStoreSpec({ getList, callListMethod }) {
 /**
  * Creates a simple paginated store that represents a global list (e.g. feed).
  */
-function createListStore(spec) {
-  var list = new PaginatedList();
+export function createListStore(spec) {
+  const list = new PaginatedList();
 
   function getList() {
     return list;
@@ -250,10 +248,10 @@ function createListStore(spec) {
   }
 
   return createStore(
-    merge(spec, createListStoreSpec({
+    assign(createListStoreSpec({
       getList: getList,
       callListMethod: callListMethod
-    }))
+    }), spec)
   );
 }
 
@@ -262,40 +260,43 @@ function createListStore(spec) {
  * (e.g. user's posts). Expects foreign key ID to be passed as first parameter
  * to store methods.
  */
-function createIndexedListStore(spec) {
-  var lists = {};
+export function createIndexedListStore(spec) {
+  const lists = {};
+  const prefix = 'ID_';
 
   function getList(id) {
-    if (!lists[id]) {
-      lists[id] = new PaginatedList();
+    const key = prefix + id;
+
+    if (!lists[key]) {
+      lists[key] = new PaginatedList();
     }
 
-    return lists[id];
+    return lists[key];
   }
 
   function callListMethod(method, args) {
-    var id = args.shift();
-    if (typeof id ===  'undefined') {
+    const id = args.shift();
+    if (typeof id === 'undefined') {
       throw new Error('Indexed pagination store methods expect ID as first parameter.');
     }
 
-    var list = getList(id);
+    const list = getList(id);
     return list[method].call(list, args);
   }
 
   return createStore(
-    merge(spec, createListStoreSpec({
+    assign(createListStoreSpec({
       getList: getList,
       callListMethod: callListMethod
-    }))
+    }), spec)
   );
 }
 
 /**
  * Creates a handler that responds to list store pagination actions.
  */
-function createListActionHandler(actions) {
-  var {
+export function createListActionHandler(actions) {
+  const {
     request: requestAction,
     error: errorAction,
     success: successAction
@@ -327,21 +328,19 @@ function createListActionHandler(actions) {
     }
   };
 }
-
-var PaginatedStoreUtils = {
-  createListStore: createListStore,
-  createIndexedListStore: createIndexedListStore,
-  createListActionHandler: createListActionHandler
-};
 ```
 
-### [`createStoreMixin`](https://github.com/gaearon/flux-react-router-example/blob/master/scripts/mixins/createStoreMixin.js)
+### [`connectToStores`](https://github.com/gaearon/flux-react-router-example/blob/master/scripts/utils/connectToStores.js)
 
-A mixin that allows components to tune in to Stores they're interested in, e.g. `mixins: [createStoreMixin(UserStore)]`.
+A [higher-order component](https://gist.github.com/sebmarkbage/ef0bf1f338a7182b6775) that allows components to tune in to Stores they're interested in.
 
 ```javascript
-function createStoreMixin(...stores) {
-  var StoreMixin = {
+export default function connectToStores(Component, stores, pickProps, getState) {
+  const StoreConnector = React.createClass({
+    getStateFromStores(props) {
+      return getState(pickProps(props));
+    },
+
     getInitialState() {
       return this.getStateFromStores(this.props);
     },
@@ -354,6 +353,12 @@ function createStoreMixin(...stores) {
       this.setState(this.getStateFromStores(this.props));
     },
 
+    componentWillReceiveProps(nextProps) {
+      if (!shallowEqual(pickProps(nextProps), pickProps(this.props))) {
+        this.setState(this.getStateFromStores(nextProps));
+      }
+    },
+
     componentWillUnmount() {
       stores.forEach(store =>
         store.removeChangeListener(this.handleStoresChanged)
@@ -364,9 +369,13 @@ function createStoreMixin(...stores) {
       if (this.isMounted()) {
         this.setState(this.getStateFromStores(this.props));
       }
-    }
-  };
+    },
 
-  return StoreMixin;
-}
+    render() {
+      return <Component {...this.props} {...this.state} />;
+    }
+  });
+
+  return StoreConnector;
+};
 ```
