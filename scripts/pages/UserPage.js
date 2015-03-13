@@ -8,60 +8,46 @@ var React = require('react'),
     StarredReposByUserStore = require('../stores/StarredReposByUserStore'),
     RepoStore = require('../stores/RepoStore'),
     UserStore = require('../stores/UserStore'),
-    createStoreMixin = require('../mixins/createStoreMixin'),
+    connectToStores = require('../utils/connectToStores'),
     DocumentTitle = require('react-document-title'),
     { PropTypes } = React;
 
-var UserPage = React.createClass({
-  mixins: [createStoreMixin(UserStore, StarredReposByUserStore, RepoStore)],
+function parseLogin(params) {
+  return params.login;
+}
 
+var UserPage = React.createClass({
   propTypes: {
     params: PropTypes.shape({
       login: PropTypes.string.isRequired
-    }).isRequired
-  },
-
-  parseLogin(props) {
-    props = props || this.props;
-    return props.params.login;
-  },
-
-  getStateFromStores(props) {
-    var userLogin = this.parseLogin(props),
-        user = UserStore.get(userLogin),
-        starred = StarredReposByUserStore.getRepos(userLogin),
-        starredOwners = starred.map(repo => UserStore.get(repo.owner));
-
-    return {
-      user: user,
-      starred: starred,
-      starredOwners: starredOwners
-    };
+    }).isRequired,
+    user: PropTypes.object,
+    starred: PropTypes.arrayOf(PropTypes.object).isRequired,
+    starredOwners: PropTypes.arrayOf(PropTypes.object).isRequired
   },
 
   componentDidMount() {
-    this.userDidChange();
+    this.userDidChange(this.props);
   },
 
   componentWillReceiveProps(nextProps) {
-    if (this.parseLogin(nextProps) !== this.parseLogin(this.props)) {
-      this.setState(this.getStateFromStores(nextProps));
+    if (parseLogin(nextProps.params) !== parseLogin(this.props.params)) {
       this.userDidChange(nextProps);
     }
   },
 
   userDidChange(props) {
-    var userLogin = this.parseLogin(props);
+    var userLogin = parseLogin(props.params);
 
     UserActionCreators.requestUser(userLogin, ['name', 'avatarUrl']);
     RepoActionCreators.requestStarredReposPage(userLogin, true);
   },
 
   render() {
-    var { user, starredRepos } = this.state;
+    var { user, starredRepos } = this.props;
 
     return (
-      <DocumentTitle title={'Starred by ' + this.parseLogin()}>
+      <DocumentTitle title={'Starred by ' + parseLogin(this.props.params)}>
         <div>
           {user ?
             <User user={user} /> :
@@ -76,17 +62,17 @@ var UserPage = React.createClass({
   },
 
   renderStarredRepos() {
-    var userLogin = this.parseLogin(),
-        isEmpty = this.state.starred.length === 0,
+    var userLogin = parseLogin(this.props.params),
+        isEmpty = this.props.starred.length === 0,
         isFetching = StarredReposByUserStore.isExpectingPage(userLogin),
         isLastPage = StarredReposByUserStore.isLastPage(userLogin);
 
     return (
       <div>
-        {this.state.starred.map((repo, index) =>
+        {this.props.starred.map((repo, index) =>
           <Repo key={repo.fullName}
                 repo={repo}
-                owner={this.state.starredOwners[index]} />
+                owner={this.props.starredOwners[index]} />
         )}
 
         {isEmpty && !isFetching &&
@@ -107,8 +93,23 @@ var UserPage = React.createClass({
   },
 
   handleLoadMoreClick() {
-    RepoActionCreators.requestStarredReposPage(this.parseLogin());
+    RepoActionCreators.requestStarredReposPage(parseLogin(this.props.params));
   }
 });
 
-module.exports = UserPage;
+module.exports = connectToStores(UserPage,
+  [UserStore, StarredReposByUserStore, RepoStore],
+  ({ params }) => ({ params }),
+  ({ params }) => {
+    var userLogin = parseLogin(params),
+        user = UserStore.get(userLogin),
+        starred = StarredReposByUserStore.getRepos(userLogin),
+        starredOwners = starred.map(repo => UserStore.get(repo.owner));
+
+    return {
+      user: user,
+      starred: starred,
+      starredOwners: starredOwners
+    };
+  }
+);
