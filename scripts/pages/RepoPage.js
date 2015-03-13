@@ -15,7 +15,7 @@ function parseFullName(params) {
   return params.login + '/' + params.name;
 }
 
-const RepoPage = React.createClass({
+let RepoPage = React.createClass({
   propTypes: {
     params: PropTypes.shape({
       login: PropTypes.string.isRequired,
@@ -99,6 +99,13 @@ const RepoPage = React.createClass({
     UserActionCreators.requestStargazerPage(fullName);
   }
 });
+
+if (module.makeHot) {
+  // Because we don't export RepoPage directly,
+  // we need to tell React Hot Loader about it,
+  // or the state will be lost on file change.
+  RepoPage = module.makeHot(RepoPage);
+}
 
 function pickProps({ params }) {
   return { params };

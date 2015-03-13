@@ -15,7 +15,7 @@ function parseLogin(params) {
   return params.login;
 }
 
-const UserPage = React.createClass({
+let UserPage = React.createClass({
   propTypes: {
     params: PropTypes.shape({
       login: PropTypes.string.isRequired
@@ -100,6 +100,13 @@ const UserPage = React.createClass({
     RepoActionCreators.requestStarredReposPage(login);
   }
 });
+
+if (module.makeHot) {
+  // Because we don't export UserPage directly,
+  // we need to tell React Hot Loader about it,
+  // or the state will be lost on file change.
+  UserPage = module.makeHot(UserPage);
+}
 
 function pickProps({ params }) {
   return { params };
