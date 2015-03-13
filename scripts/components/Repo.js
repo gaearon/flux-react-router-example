@@ -1,11 +1,10 @@
 'use strict';
 
-var React = require('react'),
-    { PureRenderMixin } = require('react/addons'),
-    { Link } = require('react-router'),
-    { PropTypes } = React;
+import React, { PropTypes } from 'react';
+import PureRenderMixin from 'react/lib/ReactComponentWithPureRenderMixin';
+import { Link } from 'react-router';
 
-var Repo = React.createClass({
+const Repo = React.createClass({
   mixins: [PureRenderMixin],
 
   propTypes: {
@@ -33,4 +32,4 @@ var Repo = React.createClass({
   }
 });
 
-module.exports = Repo;
+export default Repo;

@@ -1,10 +1,10 @@
 'use strict';
 
-var React = require('react');
-var shallowEqual = require('react/lib/shallowEqual');
+import React from 'react';
+import shallowEqual from 'react/lib/shallowEqual';
 
-function connectToStores(Component, stores, pickProps, getState) {
-  var StoreConnector = React.createClass({
+export default function connectToStores(Component, stores, pickProps, getState) {
+  const StoreConnector = React.createClass({
     getStateFromStores(props) {
       return getState(pickProps(props));
     },
@@ -40,11 +40,9 @@ function connectToStores(Component, stores, pickProps, getState) {
     },
 
     render() {
-      return <Component {...this.props} {...this.state} />
+      return <Component {...this.props} {...this.state} />;
     }
   });
 
   return StoreConnector;
-}
-
-module.exports = connectToStores;
+};

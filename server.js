@@ -1,8 +1,8 @@
-var path = require('path'),
-    request = require('request'),
-    webpack = require('webpack'),
-    WebpackDevServer = require('webpack-dev-server'),
-    config = require('./webpack.config');
+var path = require('path');
+var request = require('request');
+var webpack = require('webpack');
+var WebpackDevServer = require('webpack-dev-server');
+var config = require('./webpack.config');
 
 var server = new WebpackDevServer(webpack(config), {
   publicPath: config.output.publicPath,

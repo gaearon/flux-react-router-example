@@ -1,12 +1,10 @@
 'use strict';
 
-var React = require('react'),
-    UserStore = require('../stores/UserStore'),
-    { PureRenderMixin } = require('react/addons'),
-    { Link } = require('react-router'),
-    { PropTypes } = React;
+import React, { PropTypes } from 'react';
+import PureRenderMixin from 'react/lib/ReactComponentWithPureRenderMixin';
+import { Link } from 'react-router';
 
-var User = React.createClass({
+const User = React.createClass({
   mixins: [PureRenderMixin],
 
   propTypes: {
@@ -14,7 +12,7 @@ var User = React.createClass({
   },
 
   render() {
-    var { user } = this.props;
+    const { user } = this.props;
 
     return (
       <div className='User'>
@@ -29,4 +27,4 @@ var User = React.createClass({
   }
 });
 
-module.exports = User;
+export default User;

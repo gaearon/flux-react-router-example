@@ -1,10 +1,10 @@
 'use strict';
 
-var Dispatcher = require('flux').Dispatcher,
-    PayloadSources = require('../constants/PayloadSources'),
-    assign = require('object-assign');
+import { Dispatcher } from 'flux';
+import PayloadSources from '../constants/PayloadSources';
+import assign from 'object-assign';
 
-var AppDispatcher = assign(new Dispatcher(), {
+const AppDispatcher = assign(new Dispatcher(), {
   handleServerAction(action) {
     console.log('server action', action);
 
@@ -14,7 +14,7 @@ var AppDispatcher = assign(new Dispatcher(), {
 
     this.dispatch({
       source: PayloadSources.SERVER_ACTION,
-      action: action
+      action
     });
   },
 
@@ -27,9 +27,9 @@ var AppDispatcher = assign(new Dispatcher(), {
 
     this.dispatch({
       source: PayloadSources.VIEW_ACTION,
-      action: action
+      action
     });
   }
 });
 
-module.exports = AppDispatcher;
+export default AppDispatcher;

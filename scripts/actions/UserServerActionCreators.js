@@ -1,13 +1,13 @@
 'use strict';
 
-var AppDispatcher = require('../dispatcher/AppDispatcher'),
-    ActionTypes = require('../constants/ActionTypes');
+import AppDispatcher from '../dispatcher/AppDispatcher';
+import ActionTypes from '../constants/ActionTypes';
 
-var UserServerActionCreators = {
+export default {
   handleUserSuccess(response) {
     AppDispatcher.handleServerAction({
       type: ActionTypes.REQUEST_USER_SUCCESS,
-      response: response
+      response
     });
   },
 
@@ -22,8 +22,8 @@ var UserServerActionCreators = {
   handleStargazerPageSuccess(fullName, response) {
     AppDispatcher.handleServerAction({
       type: ActionTypes.REQUEST_STARGAZER_PAGE_SUCCESS,
-      fullName: fullName,
-      response: response
+      fullName,
+      response
     });
   },
 
@@ -32,9 +32,7 @@ var UserServerActionCreators = {
 
     AppDispatcher.handleServerAction({
       type: ActionTypes.REQUEST_STARGAZER_PAGE_ERROR,
-      fullName: fullName
+      fullName
     });
   }
 };
-
-module.exports = UserServerActionCreators;

@@ -1,26 +1,26 @@
 'use strict';
 
-var React = require('react'),
-    User = require('../components/User'),
-    Repo = require('../components/Repo'),
-    RepoActionCreators = require('../actions/RepoActionCreators'),
-    UserActionCreators = require('../actions/UserActionCreators'),
-    StarredReposByUserStore = require('../stores/StarredReposByUserStore'),
-    RepoStore = require('../stores/RepoStore'),
-    UserStore = require('../stores/UserStore'),
-    connectToStores = require('../utils/connectToStores'),
-    DocumentTitle = require('react-document-title'),
-    { PropTypes } = React;
+import React, { PropTypes } from 'react';
+import User from '../components/User';
+import Repo from '../components/Repo';
+import RepoActionCreators from '../actions/RepoActionCreators';
+import UserActionCreators from '../actions/UserActionCreators';
+import StarredReposByUserStore from '../stores/StarredReposByUserStore';
+import RepoStore from '../stores/RepoStore';
+import UserStore from '../stores/UserStore';
+import connectToStores from '../utils/connectToStores';
+import DocumentTitle from 'react-document-title';
 
 function parseLogin(params) {
   return params.login;
 }
 
-var UserPage = React.createClass({
+const UserPage = React.createClass({
   propTypes: {
     params: PropTypes.shape({
       login: PropTypes.string.isRequired
     }).isRequired,
+
     user: PropTypes.object,
     starred: PropTypes.arrayOf(PropTypes.object).isRequired,
     starredOwners: PropTypes.arrayOf(PropTypes.object).isRequired
@@ -37,17 +37,18 @@ var UserPage = React.createClass({
   },
 
   userDidChange(props) {
-    var userLogin = parseLogin(props.params);
+    const userLogin = parseLogin(props.params);
 
     UserActionCreators.requestUser(userLogin, ['name', 'avatarUrl']);
     RepoActionCreators.requestStarredReposPage(userLogin, true);
   },
 
   render() {
-    var { user, starredRepos } = this.props;
+    const { user, params } = this.props;
+    const login = parseLogin(params);
 
     return (
-      <DocumentTitle title={'Starred by ' + parseLogin(this.props.params)}>
+      <DocumentTitle title={`Starred by ${login}`}>
         <div>
           {user ?
             <User user={user} /> :
@@ -62,17 +63,19 @@ var UserPage = React.createClass({
   },
 
   renderStarredRepos() {
-    var userLogin = parseLogin(this.props.params),
-        isEmpty = this.props.starred.length === 0,
-        isFetching = StarredReposByUserStore.isExpectingPage(userLogin),
-        isLastPage = StarredReposByUserStore.isLastPage(userLogin);
+    const { starred, starredOwners, params } = this.props;
+    const login = parseLogin(params);
+
+    const isEmpty = starred.length === 0;
+    const isFetching = StarredReposByUserStore.isExpectingPage(login);
+    const isLastPage = StarredReposByUserStore.isLastPage(login);
 
     return (
       <div>
-        {this.props.starred.map((repo, index) =>
+        {starred.map((repo, index) =>
           <Repo key={repo.fullName}
                 repo={repo}
-                owner={this.props.starredOwners[index]} />
+                owner={starredOwners[index]} />
         )}
 
         {isEmpty && !isFetching &&
@@ -93,23 +96,27 @@ var UserPage = React.createClass({
   },
 
   handleLoadMoreClick() {
-    RepoActionCreators.requestStarredReposPage(parseLogin(this.props.params));
+    const login = parseLogin(this.props.params);
+    RepoActionCreators.requestStarredReposPage(login);
   }
 });
 
-module.exports = connectToStores(UserPage,
-  [UserStore, StarredReposByUserStore, RepoStore],
-  ({ params }) => ({ params }),
-  ({ params }) => {
-    var userLogin = parseLogin(params),
-        user = UserStore.get(userLogin),
-        starred = StarredReposByUserStore.getRepos(userLogin),
-        starredOwners = starred.map(repo => UserStore.get(repo.owner));
+function pickProps({ params }) {
+  return { params };
+}
 
-    return {
-      user: user,
-      starred: starred,
-      starredOwners: starredOwners
-    };
-  }
+function getState({ params }) {
+  const login = parseLogin(params);
+
+  const user = UserStore.get(login);
+  const starred = StarredReposByUserStore.getRepos(login);
+  const starredOwners = starred.map(repo => UserStore.get(repo.owner));
+
+  return { user, starred, starredOwners };
+}
+
+export default connectToStores(UserPage,
+  [UserStore, StarredReposByUserStore, RepoStore],
+  pickProps,
+  getState
 );

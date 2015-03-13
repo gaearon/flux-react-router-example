@@ -1,12 +1,11 @@
 'use strict';
 
-var React = require('react'),
-    Explore = require('./components/Explore'),
-    DocumentTitle = require('react-document-title'),
-    { RouteHandler } = require('react-router'),
-    { PropTypes } = React;
+import React, { PropTypes } from 'react';
+import Explore from './components/Explore';
+import DocumentTitle from 'react-document-title';
+import { RouteHandler } from 'react-router';
 
-var App = React.createClass({
+const App = React.createClass({
   propTypes: {
     params: PropTypes.object.isRequired,
     query: PropTypes.object.isRequired
@@ -25,4 +24,4 @@ var App = React.createClass({
   }
 });
 
-module.exports = App;
+export default App;

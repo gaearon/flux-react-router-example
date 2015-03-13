@@ -1,24 +1,24 @@
 'use strict';
 
-var AppDispatcher = require('../dispatcher/AppDispatcher'),
-    ActionTypes = require('../constants/ActionTypes'),
-    RepoAPI = require('../utils/RepoAPI'),
-    StarredReposByUserStore = require('../stores/StarredReposByUserStore'),
-    RepoStore = require('../stores/RepoStore');
+import AppDispatcher from '../dispatcher/AppDispatcher';
+import ActionTypes from '../constants/ActionTypes';
+import RepoAPI from '../api/RepoAPI';
+import StarredReposByUserStore from '../stores/StarredReposByUserStore';
+import RepoStore from '../stores/RepoStore';
 
-var RepoActionCreators = {
+export default {
   requestRepo(fullName, fields) {
     if (RepoStore.contains(fullName, fields)) {
       return;
     }
-    
+
     // Although this action is currently not handled by any store,
     // it is fired for consistency. You might want to use it later,
     // e.g. to show a spinner or have a more detailed log.
 
     AppDispatcher.handleViewAction({
       type: ActionTypes.REQUEST_REPO,
-      fullName: fullName
+      fullName
     });
 
     RepoAPI.requestRepo(fullName);
@@ -36,12 +36,10 @@ var RepoActionCreators = {
 
     AppDispatcher.handleViewAction({
       type: ActionTypes.REQUEST_STARRED_REPOS_PAGE,
-      login: login
+      login
     });
 
-    var nextPageUrl = StarredReposByUserStore.getNextPageUrl(login);
+    const nextPageUrl = StarredReposByUserStore.getNextPageUrl(login);
     RepoAPI.requestStarredReposPage(login, nextPageUrl);
   }
 };
-
-module.exports = RepoActionCreators;

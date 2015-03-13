@@ -1,20 +1,17 @@
 'use strict';
 
-var StoreUtils = require('./StoreUtils'),
-    PaginatedList = require('../utils/PaginatedList'),
-    invariant = require('react/lib/invariant'),
-    assign = require('object-assign'),
-    createStore = StoreUtils.createStore;
+import { createStore } from './StoreUtils';
+import PaginatedList from '../utils/PaginatedList';
+import invariant from 'react/lib/invariant';
+import assign from 'object-assign';
 
-var PROXIED_PAGINATED_LIST_METHODS = [
+const PROXIED_PAGINATED_LIST_METHODS = [
   'getIds', 'getPageCount', 'getNextPageUrl',
   'isExpectingPage', 'isLastPage'
 ];
 
 function createListStoreSpec({ getList, callListMethod }) {
-  var spec = {
-    getList: getList
-  };
+  const spec = { getList };
 
   PROXIED_PAGINATED_LIST_METHODS.forEach(method => {
     spec[method] = function (...args) {
@@ -28,8 +25,8 @@ function createListStoreSpec({ getList, callListMethod }) {
 /**
  * Creates a simple paginated store that represents a global list (e.g. feed).
  */
-function createListStore(spec) {
-  var list = new PaginatedList();
+export function createListStore(spec) {
+  const list = new PaginatedList();
 
   function getList() {
     return list;
@@ -52,12 +49,12 @@ function createListStore(spec) {
  * (e.g. user's posts). Expects foreign key ID to be passed as first parameter
  * to store methods.
  */
-function createIndexedListStore(spec) {
-  var lists = {},
-      prefix = 'ID_';
+export function createIndexedListStore(spec) {
+  const lists = {};
+  const prefix = 'ID_';
 
   function getList(id) {
-    var key = prefix + id;
+    const key = prefix + id;
 
     if (!lists[key]) {
       lists[key] = new PaginatedList();
@@ -67,12 +64,12 @@ function createIndexedListStore(spec) {
   }
 
   function callListMethod(method, args) {
-    var id = args.shift();
-    if (typeof id ===  'undefined') {
+    const id = args.shift();
+    if (typeof id === 'undefined') {
       throw new Error('Indexed pagination store methods expect ID as first parameter.');
     }
 
-    var list = getList(id);
+    const list = getList(id);
     return list[method].call(list, args);
   }
 
@@ -87,8 +84,8 @@ function createIndexedListStore(spec) {
 /**
  * Creates a handler that responds to list store pagination actions.
  */
-function createListActionHandler(actions) {
-  var {
+export function createListActionHandler(actions) {
+  const {
     request: requestAction,
     error: errorAction,
     success: successAction
@@ -120,11 +117,3 @@ function createListActionHandler(actions) {
     }
   };
 }
-
-var PaginatedStoreUtils = {
-  createListStore: createListStore,
-  createIndexedListStore: createIndexedListStore,
-  createListActionHandler: createListActionHandler
-};
-
-module.exports = PaginatedStoreUtils;

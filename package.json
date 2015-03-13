@@ -7,7 +7,7 @@
     "humps": "0.0.1",
     "normalizr": "^0.1.2",
     "object-assign": "^1.0.0",
-    "react": "^0.12.0",
+    "react": "^0.12.2",
     "react-document-title": "^1.0.0",
     "react-router": "^0.12.0",
     "superagent": "^0.18.2",
@@ -22,7 +22,8 @@
     "webpack-dev-server": "^1.7.0"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "build": "./node_modules/.bin/webpack --config webpack.config.production.js"
   },
   "repository": {
     "type": "git",
