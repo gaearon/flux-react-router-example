@@ -7,7 +7,7 @@ export default {
   handleRepoSuccess(response) {
     AppDispatcher.handleServerAction({
       type: ActionTypes.REQUEST_REPO_SUCCESS,
-      response: response
+      response
     });
   },
 

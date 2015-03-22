@@ -5,5 +5,5 @@ import routes from './routes';
 
 export default createRouter({
   location: process.env.NODE_ENV === 'production' ? HashLocation : HistoryLocation,
-  routes: routes
+  routes
 });

@@ -39,8 +39,8 @@ export default {
 
     return createStore(
       assign(createListStoreSpec({
-        getList: getList,
-        callListMethod: callListMethod
+        getList,
+        callListMethod
       }), spec)
     );
   },
@@ -76,8 +76,8 @@ export default {
 
     return createStore(
       assign(createListStoreSpec({
-        getList: getList,
-        callListMethod: callListMethod
+        getList,
+        callListMethod
       }), spec)
     );
   },
