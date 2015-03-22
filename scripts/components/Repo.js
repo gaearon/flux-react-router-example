@@ -1,16 +1,21 @@
 'use strict';
 
 import React, { PropTypes } from 'react';
-import PureRenderMixin from 'react/lib/ReactComponentWithPureRenderMixin';
+import shallowEqual from 'react/lib/shallowEqual';
 import { Link } from 'react-router';
 
-const Repo = React.createClass({
-  mixins: [PureRenderMixin],
+class Repo extends React.Component {
 
-  propTypes: {
-    repo: PropTypes.object.isRequired,
-    owner: PropTypes.object.isRequired
-  },
+  // TODO: make it either a HigherOrderComponent
+  // or a subclass of `React.Component` and extend from it
+  // Example:
+  //    class PureComponent extends React.Component
+  //
+  //    class MyComponent extends PureComponent
+  shouldComponentUpdate(nextProps, nextState) {
+    return !shallowEqual(this.props, nextProps) ||
+           !shallowEqual(this.state, nextState);
+  }
 
   render() {
     var { repo, owner } = this.props;
@@ -30,6 +35,11 @@ const Repo = React.createClass({
       </div>
     );
   }
-});
+}
+// or declare it in the constructor
+Repo.propTypes = {
+  repo: PropTypes.object.isRequired,
+  owner: PropTypes.object.isRequired
+};
 
 export default Repo;

@@ -1,15 +1,21 @@
 'use strict';
 
 import React, { PropTypes } from 'react';
-import PureRenderMixin from 'react/lib/ReactComponentWithPureRenderMixin';
+import shallowEqual from 'react/lib/shallowEqual';
 import { Link } from 'react-router';
 
-const User = React.createClass({
-  mixins: [PureRenderMixin],
+class User extends React.Component {
 
-  propTypes: {
-    user: PropTypes.object.isRequired
-  },
+  // TODO: make it either a HigherOrderComponent
+  // or a subclass of `React.Component` and extend from it
+  // Example:
+  //    class PureComponent extends React.Component
+  //
+  //    class MyComponent extends PureComponent
+  shouldComponentUpdate(nextProps, nextState) {
+    return !shallowEqual(this.props, nextProps) ||
+           !shallowEqual(this.state, nextState);
+  }
 
   render() {
     const { user } = this.props;
@@ -25,6 +31,10 @@ const User = React.createClass({
       </div>
     );
   }
-});
+}
+// or declare it in the constructor
+User.propTypes = {
+  user: PropTypes.object.isRequired
+};
 
 export default User;
