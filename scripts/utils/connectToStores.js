@@ -4,45 +4,43 @@ import React from 'react';
 import shallowEqual from 'react/lib/shallowEqual';
 
 export default function connectToStores(Component, stores, pickProps, getState) {
-  const StoreConnector = React.createClass({
+  class StoreConnector extends React.Component {
+    constructor(props) {
+      this.state = this.getStateFromStores(props);
+    }
+
     getStateFromStores(props) {
       return getState(pickProps(props));
-    },
-
-    getInitialState() {
-      return this.getStateFromStores(this.props);
-    },
+    }
 
     componentDidMount() {
       stores.forEach(store =>
-        store.addChangeListener(this.handleStoresChanged)
+        store.addChangeListener(this.handleStoresChanged.bind(this))
       );
 
       this.setState(this.getStateFromStores(this.props));
-    },
+    }
 
     componentWillReceiveProps(nextProps) {
       if (!shallowEqual(pickProps(nextProps), pickProps(this.props))) {
         this.setState(this.getStateFromStores(nextProps));
       }
-    },
+    }
 
     componentWillUnmount() {
       stores.forEach(store =>
-        store.removeChangeListener(this.handleStoresChanged)
+        store.removeChangeListener(this.handleStoresChanged.bind(this))
       );
-    },
+    }
 
     handleStoresChanged() {
-      if (this.isMounted()) {
-        this.setState(this.getStateFromStores(this.props));
-      }
-    },
+      this.setState(this.getStateFromStores(this.props));
+    }
 
     render() {
       return <Component {...this.props} {...this.state} />;
     }
-  });
+  }
 
   return StoreConnector;
 };
