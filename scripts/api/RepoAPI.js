@@ -9,8 +9,8 @@ import {
 
 export default {
   requestRepo(fullName) {
-    request(`repos/${fullName}`).end(function (res) {
-      if (!res.ok) {
+    request(`repos/${fullName}`).end(function (err, res) {
+      if (err) {
         RepoServerActionCreators.handleRepoError(res.text);
         return;
       }
@@ -23,8 +23,8 @@ export default {
   requestStarredReposPage(login, serverSuppliedUrl) {
     const url = serverSuppliedUrl || `users/${login}/starred`;
 
-    request(url).end(function (res) {
-      if (!res.ok) {
+    request(url).end(function (err, res) {
+      if (err) {
         RepoServerActionCreators.handleStarredReposPageError(login, res.text);
         return;
       }

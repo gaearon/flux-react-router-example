@@ -6,12 +6,12 @@
     "flux": "^2.0.1",
     "humps": "0.0.1",
     "normalizr": "^0.1.2",
-    "object-assign": "^1.0.0",
+    "object-assign": "^2.0.0",
     "react": "^0.13.1",
     "react-document-title": "^1.0.0",
     "react-router": "^0.13.1",
-    "superagent": "^0.18.2",
-    "underscore": "^1.6.0"
+    "superagent": "^1.1.0",
+    "underscore": "^1.8.2"
   },
   "devDependencies": {
     "babel-core": "^4.7.9",
