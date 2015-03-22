@@ -5,12 +5,7 @@ import Explore from './components/Explore';
 import DocumentTitle from 'react-document-title';
 import { RouteHandler } from 'react-router';
 
-const App = React.createClass({
-  propTypes: {
-    params: PropTypes.object.isRequired,
-    query: PropTypes.object.isRequired
-  },
-
+class App extends React.Component {
   render() {
     return (
       <DocumentTitle title='Sample App'>
@@ -22,6 +17,11 @@ const App = React.createClass({
       </DocumentTitle>
     );
   }
-});
+}
+// or declare it in the constructor
+App.propTypes = {
+  params: PropTypes.object.isRequired,
+  query: PropTypes.object.isRequired
+};
 
 export default App;

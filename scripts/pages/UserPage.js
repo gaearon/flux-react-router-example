@@ -15,33 +15,24 @@ function parseLogin(params) {
   return params.login;
 }
 
-let UserPage = React.createClass({
-  propTypes: {
-    params: PropTypes.shape({
-      login: PropTypes.string.isRequired
-    }).isRequired,
-
-    user: PropTypes.object,
-    starred: PropTypes.arrayOf(PropTypes.object).isRequired,
-    starredOwners: PropTypes.arrayOf(PropTypes.object).isRequired
-  },
+class UserPage extends React.Component {
 
   componentDidMount() {
-    this.userDidChange(this.props);
-  },
+    this.userDidChange.call(this, this.props);
+  }
 
   componentWillReceiveProps(nextProps) {
     if (parseLogin(nextProps.params) !== parseLogin(this.props.params)) {
-      this.userDidChange(nextProps);
+      this.userDidChange.call(this, nextProps);
     }
-  },
+  }
 
   userDidChange(props) {
     const userLogin = parseLogin(props.params);
 
     UserActionCreators.requestUser(userLogin, ['name', 'avatarUrl']);
     RepoActionCreators.requestStarredReposPage(userLogin, true);
-  },
+  }
 
   render() {
     const { user, params } = this.props;
@@ -56,11 +47,11 @@ let UserPage = React.createClass({
           }
 
           <h1>Starred repos</h1>
-          {this.renderStarredRepos()}
+          {this.renderStarredRepos.call(this)}
         </div>
       </DocumentTitle>
     );
-  },
+  }
 
   renderStarredRepos() {
     const { starred, starredOwners, params } = this.props;
@@ -87,19 +78,28 @@ let UserPage = React.createClass({
         }
 
         {!isEmpty && (isFetching || !isLastPage) &&
-          <button onClick={this.handleLoadMoreClick} disabled={isFetching}>
+          <button onClick={this.handleLoadMoreClick.bind(this)} disabled={isFetching}>
             {isFetching ? 'Loading...' : 'Load more'}
           </button>
         }
       </div>
     );
-  },
+  }
 
   handleLoadMoreClick() {
     const login = parseLogin(this.props.params);
     RepoActionCreators.requestStarredReposPage(login);
   }
-});
+}
+// or declare it in the constructor
+UserPage.propTypes = {
+  params: PropTypes.shape({
+    login: PropTypes.string.isRequired
+  }).isRequired,
+  user: PropTypes.object,
+  starred: PropTypes.arrayOf(PropTypes.object).isRequired,
+  starredOwners: PropTypes.arrayOf(PropTypes.object).isRequired
+};
 
 if (module.makeHot) {
   // Because we don't export UserPage directly,

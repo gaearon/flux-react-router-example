@@ -15,34 +15,24 @@ function parseFullName(params) {
   return params.login + '/' + params.name;
 }
 
-let RepoPage = React.createClass({
-  propTypes: {
-    params: PropTypes.shape({
-      login: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired
-    }).isRequired,
-
-    repo: PropTypes.object,
-    owner: PropTypes.object,
-    stargazers: PropTypes.arrayOf(PropTypes.object).isRequired
-  },
+class RepoPage extends React.Component {
 
   componentDidMount() {
-    this.repoDidChange(this.props);
-  },
+    this.repoDidChange.call(this, this.props);
+  }
 
   componentWillReceiveProps(nextProps) {
     if (parseFullName(nextProps.params) !== parseFullName(this.props.params)) {
-      this.repoDidChange(nextProps);
+      this.repoDidChange.call(this, nextProps);
     }
-  },
+  }
 
   repoDidChange(props) {
     const fullName = parseFullName(props.params);
 
     RepoActionCreators.requestRepo(fullName);
     UserActionCreators.requestStargazerPage(fullName, true);
-  },
+  }
 
   render() {
     const { repo, owner, params } = this.props;
@@ -57,11 +47,11 @@ let RepoPage = React.createClass({
           }
 
           <h1>Stargazers</h1>
-          {this.renderStargazers()}
+          {this.renderStargazers.call(this)}
         </div>
       </DocumentTitle>
     );
-  },
+  }
 
   renderStargazers() {
     const { stargazers } = this.props;
@@ -86,19 +76,29 @@ let RepoPage = React.createClass({
         }
 
         {!isEmpty && (isFetching || !isLastPage) &&
-          <button onClick={this.handleLoadMoreClick} disabled={isFetching}>
+          <button onClick={this.handleLoadMoreClick.bind(this)} disabled={isFetching}>
             {isFetching ? 'Loading...' : 'Load more'}
           </button>
         }
       </div>
     );
-  },
+  }
 
   handleLoadMoreClick() {
     const fullName = parseFullName(this.props.params);
     UserActionCreators.requestStargazerPage(fullName);
   }
-});
+}
+// or declare it in the constructor
+RepoPage.propTypes = {
+  params: PropTypes.shape({
+    login: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired
+  }).isRequired,
+  repo: PropTypes.object,
+  owner: PropTypes.object,
+  stargazers: PropTypes.arrayOf(PropTypes.object).isRequired
+};
 
 if (module.makeHot) {
   // Because we don't export RepoPage directly,

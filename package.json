@@ -7,9 +7,9 @@
     "humps": "0.0.1",
     "normalizr": "^0.1.2",
     "object-assign": "^1.0.0",
-    "react": "^0.12.2",
+    "react": "^0.13.1",
     "react-document-title": "^1.0.0",
-    "react-router": "^0.12.0",
+    "react-router": "^0.13.1",
     "superagent": "^0.18.2",
     "underscore": "^1.6.0"
   },
