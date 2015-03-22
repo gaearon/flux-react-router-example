@@ -10,7 +10,7 @@ class App extends React.Component {
     return (
       <DocumentTitle title='Sample App'>
         <div className='App'>
-          <Explore transitionTo={this.props.transitionTo} />
+          <Explore {...this.props} />
           <hr />
           <RouteHandler {...this.props} />
         </div>

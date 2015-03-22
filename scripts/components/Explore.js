@@ -2,11 +2,20 @@
 
 import React from 'react';
 
+const DEFAULT_LOGIN = 'gaearon';
+const parseFullName = (params) => {
+  if (!params.login) {
+    return DEFAULT_LOGIN;
+  }
+  return params.login + (params.name ? '/' + params.name : '');
+};
+
+// TODO: update input when URL changes
 class Explore extends React.Component {
 
-  constructor() {
+  constructor(props) {
     this.state = {
-      loginOrRepo: 'gaearon'
+      loginOrRepo: parseFullName(props.params)
     };
   }
 
