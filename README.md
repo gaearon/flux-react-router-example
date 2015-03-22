@@ -1,12 +1,12 @@
 Flux React Router Example
 =========================
 
-This is a sample Flux app I wrote on a weekend.  
+This is a sample Flux app I wrote on a weekend.
 It uses open Github API to display starred repos by users and stargazers by repo.
 
 ![](http://i.imgur.com/MxPpyPb.png)
 
-I made it to document a few approaches I have tried while learning Flux.  
+I made it to document a few approaches I have tried while learning Flux.
 I tried to keep it close to real world (pagination, no fake localStorage APIs).
 
 There are a few bits here I was especially interested in:
@@ -80,8 +80,8 @@ I made a few helpers though.
 This method gives you the most basic Store:
 
 ```javascript
-export function createStore(spec) {
-  var store = assign({
+const createStore = (spec) => {
+  let store = assign({
     emitChange() {
       this.emit(CHANGE_EVENT);
     },
@@ -95,7 +95,7 @@ export function createStore(spec) {
     }
   }, spec, EventEmitter.prototype);
 
-  each(store, function (val, key) {
+  each(store, (val, key) => {
     if (isFunction(val)) {
       store[key] = store[key].bind(store);
     }
@@ -113,8 +113,8 @@ I use it to create all Stores.
 Small helpers useful for Content Stores.
 
 ```javascript
-export function isInBag(bag, id, fields) {
-  var item = bag[id];
+const isInBag = (bag, id, fields) => {
+  let item = bag[id];
   if (!bag[id]) {
     return false;
   }
@@ -126,12 +126,12 @@ export function isInBag(bag, id, fields) {
   }
 }
 
-export function mergeIntoBag(bag, entities, transform) {
+const mergeIntoBag = (bag, entities, transform) => {
   if (!transform) {
     transform = (x) => x;
   }
 
-  for (var key in entities) {
+  for (let key in entities) {
     if (!entities.hasOwnProperty(key)) {
       continue;
     }
@@ -150,7 +150,7 @@ export function mergeIntoBag(bag, entities, transform) {
 Stores pagination state and enforces certain assertions (can't fetch page while fetching, etc).
 
 ```javascript
-export default class PaginatedList {
+class PaginatedList {
   constructor(ids) {
     this._ids = ids || [];
     this._pageCount = 0;
@@ -221,112 +221,114 @@ const PROXIED_PAGINATED_LIST_METHODS = [
   'isExpectingPage', 'isLastPage'
 ];
 
-function createListStoreSpec({ getList, callListMethod }) {
+const createListStoreSpec = ({ getList, callListMethod }) => {
   const spec = { getList };
 
   PROXIED_PAGINATED_LIST_METHODS.forEach(method => {
-    spec[method] = function (...args) {
+    spec[method] = (...args) => {
       return callListMethod(method, args);
     };
   });
 
   return spec;
-}
+};
 
-/**
- * Creates a simple paginated store that represents a global list (e.g. feed).
- */
-export function createListStore(spec) {
-  const list = new PaginatedList();
+export default {
+  /**
+   * Creates a simple paginated store that represents a global list (e.g. feed).
+   */
+  createListStore(spec) {
+    const list = new PaginatedList();
 
-  function getList() {
-    return list;
+    const getList = () => {
+      return list;
+    };
+
+    const callListMethod = (method, args) => {
+      return list[method].call(list, args);
+    };
+
+    return createStore(
+      assign(createListStoreSpec({
+        getList,
+        callListMethod
+      }), spec)
+    );
+  },
+
+  /**
+   * Creates an indexed paginated store that represents a one-many relationship
+   * (e.g. user's posts). Expects foreign key ID to be passed as first parameter
+   * to store methods.
+   */
+  createIndexedListStore(spec) {
+    const lists = {};
+    const prefix = 'ID_';
+
+    const getList = (id) => {
+      const key = prefix + id;
+
+      if (!lists[key]) {
+        lists[key] = new PaginatedList();
+      }
+
+      return lists[key];
+    };
+
+    const callListMethod = (method, args) => {
+      const id = args.shift();
+      if (typeof id === 'undefined') {
+        throw new Error('Indexed pagination store methods expect ID as first parameter.');
+      }
+
+      const list = getList(id);
+      return list[method].call(list, args);
+    };
+
+    return createStore(
+      assign(createListStoreSpec({
+        getList,
+        callListMethod
+      }), spec)
+    );
+  },
+
+  /**
+   * Creates a handler that responds to list store pagination actions.
+   */
+  createListActionHandler(actions) {
+    const {
+      request: requestAction,
+      error: errorAction,
+      success: successAction
+    } = actions;
+
+    invariant(requestAction, 'Pass a valid request action.');
+    invariant(errorAction, 'Pass a valid error action.');
+    invariant(successAction, 'Pass a valid success action.');
+
+    return (action, list, emitChange) => {
+      switch (action.type) {
+      case requestAction:
+        list.expectPage();
+        emitChange();
+        break;
+
+      case errorAction:
+        list.cancelPage();
+        emitChange();
+        break;
+
+      case successAction:
+        list.receivePage(
+          action.response.result,
+          action.response.nextPageUrl
+        );
+        emitChange();
+        break;
+      }
+    };
   }
-
-  function callListMethod(method, args) {
-    return list[method].call(list, args);
-  }
-
-  return createStore(
-    assign(createListStoreSpec({
-      getList: getList,
-      callListMethod: callListMethod
-    }), spec)
-  );
-}
-
-/**
- * Creates an indexed paginated store that represents a one-many relationship
- * (e.g. user's posts). Expects foreign key ID to be passed as first parameter
- * to store methods.
- */
-export function createIndexedListStore(spec) {
-  const lists = {};
-  const prefix = 'ID_';
-
-  function getList(id) {
-    const key = prefix + id;
-
-    if (!lists[key]) {
-      lists[key] = new PaginatedList();
-    }
-
-    return lists[key];
-  }
-
-  function callListMethod(method, args) {
-    const id = args.shift();
-    if (typeof id === 'undefined') {
-      throw new Error('Indexed pagination store methods expect ID as first parameter.');
-    }
-
-    const list = getList(id);
-    return list[method].call(list, args);
-  }
-
-  return createStore(
-    assign(createListStoreSpec({
-      getList: getList,
-      callListMethod: callListMethod
-    }), spec)
-  );
-}
-
-/**
- * Creates a handler that responds to list store pagination actions.
- */
-export function createListActionHandler(actions) {
-  const {
-    request: requestAction,
-    error: errorAction,
-    success: successAction
-  } = actions;
-
-  invariant(requestAction, 'Pass a valid request action.');
-  invariant(errorAction, 'Pass a valid error action.');
-  invariant(successAction, 'Pass a valid success action.');
-
-  return function (action, list, emitChange) {
-    switch (action.type) {
-    case requestAction:
-      list.expectPage();
-      emitChange();
-      break;
-
-    case errorAction:
-      list.cancelPage();
-      emitChange();
-      break;
-
-    case successAction:
-      list.receivePage(
-        action.response.result,
-        action.response.nextPageUrl
-      );
-      emitChange();
-      break;
-    }
-  };
 }
 ```
 
@@ -335,46 +337,44 @@ export function createListActionHandler(actions) {
 A [higher-order component](https://gist.github.com/sebmarkbage/ef0bf1f338a7182b6775) that allows components to tune in to Stores they're interested in.
 
 ```javascript
-export default function connectToStores(Component, stores, pickProps, getState) {
-  const StoreConnector = React.createClass({
+const connectToStores = (Component, stores, pickProps, getState) => {
+  class StoreConnector extends React.Component {
+    constructor(props) {
+      this.state = this.getStateFromStores(props);
+    }
+
     getStateFromStores(props) {
       return getState(pickProps(props));
-    },
-
-    getInitialState() {
-      return this.getStateFromStores(this.props);
-    },
+    }
 
     componentDidMount() {
       stores.forEach(store =>
-        store.addChangeListener(this.handleStoresChanged)
+        store.addChangeListener(this.handleStoresChanged.bind(this))
       );
 
       this.setState(this.getStateFromStores(this.props));
-    },
+    }
 
     componentWillReceiveProps(nextProps) {
       if (!shallowEqual(pickProps(nextProps), pickProps(this.props))) {
         this.setState(this.getStateFromStores(nextProps));
       }
-    },
+    }
 
     componentWillUnmount() {
       stores.forEach(store =>
-        store.removeChangeListener(this.handleStoresChanged)
+        store.removeChangeListener(this.handleStoresChanged.bind(this))
       );
-    },
+    }
 
     handleStoresChanged() {
-      if (this.isMounted()) {
-        this.setState(this.getStateFromStores(this.props));
-      }
-    },
+      this.setState(this.getStateFromStores(this.props));
+    }
 
     render() {
       return <Component {...this.props} {...this.state} />;
     }
-  });
+  }
 
   return StoreConnector;
 };
