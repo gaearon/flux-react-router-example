@@ -10,7 +10,7 @@ class App extends React.Component {
     return (
       <DocumentTitle title='Sample App'>
         <div className='App'>
-          <Explore />
+          <Explore transitionTo={this.props.transitionTo} />
           <hr />
           <RouteHandler {...this.props} />
         </div>
@@ -21,7 +21,8 @@ class App extends React.Component {
 // or declare it in the constructor
 App.propTypes = {
   params: PropTypes.object.isRequired,
-  query: PropTypes.object.isRequired
+  query: PropTypes.object.isRequired,
+  transitionTo: PropTypes.func.isRequired
 };
 
 export default App;

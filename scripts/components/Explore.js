@@ -2,10 +2,13 @@
 
 import React from 'react';
 import LinkedStateMixin from 'react/lib/LinkedStateMixin';
-import { Navigation } from 'react-router';
 
 const Explore = React.createClass({
-  mixins: [LinkedStateMixin, Navigation],
+  mixins: [LinkedStateMixin],
+
+  propTypes: {
+    transitionTo: React.PropTypes.func.isRequired
+  },
 
   getInitialState() {
     return {
@@ -32,7 +35,7 @@ const Explore = React.createClass({
   },
 
   handleGoClick() {
-    this.transitionTo('/' + this.state.loginOrRepo);
+    this.props.transitionTo('/' + this.state.loginOrRepo);
   }
 });
 
