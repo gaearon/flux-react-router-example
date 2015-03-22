@@ -9,7 +9,7 @@ const CHANGE_EVENT = 'change';
 
 export default {
   createStore(spec) {
-    var store = assign({
+    let store = assign({
       emitChange() {
         this.emit(CHANGE_EVENT);
       },
@@ -34,7 +34,7 @@ export default {
   },
 
   isInBag(bag, id, fields) {
-    var item = bag[id];
+    let item = bag[id];
     if (!bag[id]) {
       return false;
     }
@@ -51,7 +51,7 @@ export default {
       transform = (x) => x;
     }
 
-    for (var key in entities) {
+    for (let key in entities) {
       if (!entities.hasOwnProperty(key)) {
         continue;
       }

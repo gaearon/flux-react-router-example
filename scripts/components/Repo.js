@@ -18,7 +18,7 @@ class Repo extends React.Component {
   }
 
   render() {
-    var { repo, owner } = this.props;
+    const { repo, owner } = this.props;
 
     return (
       <div className='Repo'>
