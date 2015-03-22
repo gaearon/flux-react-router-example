@@ -14,7 +14,7 @@ repo.define({
   owner: user
 });
 
-function extractPagination(response) {
+const extractPagination = (response) => {
   const { link } = response.headers;
   if (!link) {
     return null;
@@ -28,40 +28,42 @@ function extractPagination(response) {
   return {
     nextPageUrl: nextLink.split(';')[0].slice(1, -1)
   };
-}
+};
 
-export function request(endpoint) {
-  if (endpoint.indexOf(API_ROOT) === -1) {
-    endpoint = API_ROOT + endpoint;
+export default {
+  request(endpoint) {
+    if (endpoint.indexOf(API_ROOT) === -1) {
+      endpoint = API_ROOT + endpoint;
+    }
+
+    return superagent(endpoint);
+  },
+
+  normalizeUserResponse(response) {
+    return assign(
+      normalize(camelizeKeys(response.body), user),
+      extractPagination(response)
+    );
+  },
+
+  normalizeUserArrayResponse(response) {
+    return assign(
+      normalize(camelizeKeys(response.body), arrayOf(user)),
+      extractPagination(response)
+    );
+  },
+
+  normalizeRepoResponse(response) {
+    return assign(
+      normalize(camelizeKeys(response.body), repo),
+      extractPagination(response)
+    );
+  },
+
+  normalizeRepoArrayResponse(response) {
+    return assign(
+      normalize(camelizeKeys(response.body), arrayOf(repo)),
+      extractPagination(response)
+    );
   }
-
-  return superagent(endpoint);
-}
-
-export function normalizeUserResponse(response) {
-  return assign(
-    normalize(camelizeKeys(response.body), user),
-    extractPagination(response)
-  );
-}
-
-export function normalizeUserArrayResponse(response) {
-  return assign(
-    normalize(camelizeKeys(response.body), arrayOf(user)),
-    extractPagination(response)
-  );
-}
-
-export function normalizeRepoResponse(response) {
-  return assign(
-    normalize(camelizeKeys(response.body), repo),
-    extractPagination(response)
-  );
-}
-
-export function normalizeRepoArrayResponse(response) {
-  return assign(
-    normalize(camelizeKeys(response.body), arrayOf(repo)),
-    extractPagination(response)
-  );
 }

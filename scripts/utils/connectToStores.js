@@ -3,7 +3,7 @@
 import React from 'react';
 import shallowEqual from 'react/lib/shallowEqual';
 
-export default function connectToStores(Component, stores, pickProps, getState) {
+export default (Component, stores, pickProps, getState) => {
   class StoreConnector extends React.Component {
     constructor(props) {
       this.state = this.getStateFromStores(props);

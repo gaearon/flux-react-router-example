@@ -15,7 +15,7 @@ const UserStore = createStore({
   }
 });
 
-UserStore.dispatchToken = AppDispatcher.register(function (payload) {
+UserStore.dispatchToken = AppDispatcher.register((payload) => {
   const { response } = payload.action;
   const entities = response && response.entities;
   const fetchedUsers = entities && entities.users;

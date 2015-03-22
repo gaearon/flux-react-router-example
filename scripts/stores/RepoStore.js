@@ -15,7 +15,7 @@ const RepoStore = createStore({
   }
 });
 
-RepoStore.dispatchToken = AppDispatcher.register(function (payload) {
+RepoStore.dispatchToken = AppDispatcher.register((payload) => {
   const { response } = payload.action;
   const entities = response && response.entities;
   const fetchedRepos = entities && entities.repos;

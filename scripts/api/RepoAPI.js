@@ -9,7 +9,7 @@ import {
 
 export default {
   requestRepo(fullName) {
-    request(`repos/${fullName}`).end(function (err, res) {
+    request(`repos/${fullName}`).end((err, res) => {
       if (err) {
         RepoServerActionCreators.handleRepoError(res.text);
         return;
@@ -23,7 +23,7 @@ export default {
   requestStarredReposPage(login, serverSuppliedUrl) {
     const url = serverSuppliedUrl || `users/${login}/starred`;
 
-    request(url).end(function (err, res) {
+    request(url).end((err, res) => {
       if (err) {
         RepoServerActionCreators.handleStarredReposPageError(login, res.text);
         return;

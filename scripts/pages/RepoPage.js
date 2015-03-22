@@ -11,9 +11,9 @@ import RepoStore from '../stores/RepoStore';
 import DocumentTitle from 'react-document-title';
 import connectToStores from '../utils/connectToStores';
 
-function parseFullName(params) {
+const parseFullName = (params) => {
   return params.login + '/' + params.name;
-}
+};
 
 class RepoPage extends React.Component {
 
@@ -107,18 +107,18 @@ if (module.makeHot) {
   RepoPage = module.makeHot(RepoPage);
 }
 
-function pickProps({ params }) {
+const pickProps = ({ params }) => {
   return { params };
-}
+};
 
-function getState({ params }) {
+const getState = ({ params }) => {
   const repoFullName = parseFullName(params);
   const stargazers = StargazersByRepoStore.getUsers(repoFullName);
   const repo = RepoStore.get(repoFullName);
   const owner = repo && UserStore.get(repo.owner);
 
   return { repo, owner, stargazers };
-}
+};
 
 export default connectToStores(RepoPage,
   [RepoStore, StargazersByRepoStore, UserStore],

@@ -9,7 +9,7 @@ import {
 
 export default {
   requestUser(login) {
-    request(`users/${login}`).end(function (err, res) {
+    request(`users/${login}`).end((err, res) => {
       if (err) {
         UserServerActionCreators.handleUserError(res.text);
         return;
@@ -23,7 +23,7 @@ export default {
   requestStargazerPage(fullName, serverSuppliedUrl) {
     const url = serverSuppliedUrl || `repos/${fullName}/stargazers`;
 
-    request(url).end(function (err, res) {
+    request(url).end((err, res) => {
       if (err) {
         UserServerActionCreators.handleStargazerPageError(fullName, res.text);
         return;
