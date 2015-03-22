@@ -1,42 +1,44 @@
 'use strict';
 
 import React from 'react';
-import LinkedStateMixin from 'react/lib/LinkedStateMixin';
 
-const Explore = React.createClass({
-  mixins: [LinkedStateMixin],
+class Explore extends React.Component {
 
-  propTypes: {
-    transitionTo: React.PropTypes.func.isRequired
-  },
-
-  getInitialState() {
-    return {
+  constructor() {
+    this.state = {
       loginOrRepo: 'gaearon'
     };
-  },
+  }
 
   render() {
     return (
       <div className='Explore'>
         <p>Type a username or repo full name and hit 'Go':</p>
-        <input valueLink={this.linkState('loginOrRepo')}
-               onKeyUp={this.handleKeyUp} />
-        <button onClick={this.handleGoClick}>Go!</button>
+        <input
+          ref='loginOrRepo'
+          onKeyUp={this.handleKeyUp.bind(this)}
+          defaultValue={this.state.loginOrRepo} />
+        <button onClick={this.handleGoClick.bind(this)}>Go!</button>
         <p>Code on <a href='https://github.com/gaearon/flux-react-router-example' target='_blank'>Github</a>.</p>
       </div>
     );
-  },
+  }
 
   handleKeyUp(e) {
     if (e.keyCode === 13) {
-      this.handleGoClick();
+      this.handleGoClick.call(this);
     }
-  },
+  }
 
   handleGoClick() {
-    this.props.transitionTo('/' + this.state.loginOrRepo);
+    let val = React.findDOMNode(this.refs.loginOrRepo).value;
+    this.setState({loginOrRepo: val});
+    this.props.transitionTo('/' + val);
   }
-});
+}
+// or declare it in the constructor
+Explore.propTypes = {
+  transitionTo: React.PropTypes.func.isRequired
+};
 
 export default Explore;
