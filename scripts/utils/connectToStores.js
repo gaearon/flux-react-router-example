@@ -35,8 +35,6 @@ export default (Component, stores, pickProps, getState) => {
       stores.forEach(store =>
         store.addChangeListener(this.handleStoresChanged.bind(this))
       );
-
-      this.setState(this.getStateFromStores(this.props));
     }
 
     componentWillReceiveProps(nextProps) {
