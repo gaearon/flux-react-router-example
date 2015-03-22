@@ -1,3 +1,5 @@
+'use strict';
+
 var path = require('path');
 var request = require('request');
 var webpack = require('webpack');
@@ -9,7 +11,7 @@ var server = new WebpackDevServer(webpack(config), {
   hot: true
 });
 
-server.listen(3000, 'localhost', function (err, result) {
+server.listen(3000, 'localhost', function (err) {
   if (err) {
     console.log(err);
   }
