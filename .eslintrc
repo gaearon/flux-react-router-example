@@ -8,6 +8,7 @@
   "rules": {
     "eol-last": 2,
     "quotes": [2, "single"],
-    "no-underscore-dangle": [0]
+    "no-underscore-dangle": [0],
+    "strict": 2
   }
 }
