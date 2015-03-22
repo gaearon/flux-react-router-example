@@ -3,6 +3,24 @@
 import React from 'react';
 import shallowEqual from 'react/lib/shallowEqual';
 
+// FIXME: `isMounted` is deprecated in React 0.13
+// but we need this otherwise we get a warning
+//
+//    Warning: setState(...): Can only update a mounted or mounting component.
+//    This usually means you called setState() on an unmounted component.
+//    This is a no-op.
+//
+// Apparently this is because `handleStoresChanged` is called multiple times,
+// even when the component is unmounted. Not sure how to fix this yet...
+const isMounted = (component) => {
+  try {
+    React.findDOMNode(component);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
 export default (Component, stores, pickProps, getState) => {
   class StoreConnector extends React.Component {
     constructor(props) {
@@ -34,7 +52,9 @@ export default (Component, stores, pickProps, getState) => {
     }
 
     handleStoresChanged() {
-      this.setState(this.getStateFromStores(this.props));
+      if (isMounted(this)) {
+        this.setState(this.getStateFromStores(this.props));
+      }
     }
 
     render() {
