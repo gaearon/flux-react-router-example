@@ -1,7 +1,5 @@
 'use strict';
 
-var path = require('path');
-var request = require('request');
 var webpack = require('webpack');
 var WebpackDevServer = require('webpack-dev-server');
 var config = require('./webpack.config');
