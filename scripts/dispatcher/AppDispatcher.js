@@ -2,9 +2,8 @@
 
 import { Dispatcher } from 'flux';
 import PayloadSources from '../constants/PayloadSources';
-import assign from 'object-assign';
 
-const AppDispatcher = assign(new Dispatcher(), {
+const AppDispatcher = Object.assign(new Dispatcher(), {
   handleServerAction(action) {
     console.log('server action', action);
 

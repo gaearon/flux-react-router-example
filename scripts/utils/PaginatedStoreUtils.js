@@ -3,7 +3,6 @@
 import { createStore } from './StoreUtils';
 import PaginatedList from '../utils/PaginatedList';
 import invariant from 'react/lib/invariant';
-import assign from 'object-assign';
 
 const PROXIED_PAGINATED_LIST_METHODS = [
   'getIds', 'getPageCount', 'getNextPageUrl',
@@ -38,7 +37,7 @@ export default {
     };
 
     return createStore(
-      assign(createListStoreSpec({
+      Object.assign(createListStoreSpec({
         getList,
         callListMethod
       }), spec)
@@ -75,7 +74,7 @@ export default {
     };
 
     return createStore(
-      assign(createListStoreSpec({
+      Object.assign(createListStoreSpec({
         getList,
         callListMethod
       }), spec)

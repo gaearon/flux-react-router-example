@@ -22,7 +22,7 @@ class User extends React.Component {
 
     return (
       <div className='User'>
-        <Link to='user' params={{login: user.login}}>
+        <Link to='user' params={{ login: user.login }}>
           <img src={user.avatarUrl} width='72' height='72' />
           <h3>
             {user.login} {user.name && <span>({user.name})</span>}

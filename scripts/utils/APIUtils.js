@@ -2,7 +2,6 @@
 
 import { Schema, arrayOf, normalize } from 'normalizr';
 import { camelizeKeys } from 'humps';
-import assign from 'object-assign';
 import superagent from 'superagent';
 
 const API_ROOT = 'https://api.github.com/';
@@ -40,28 +39,28 @@ export default {
   },
 
   normalizeUserResponse(response) {
-    return assign(
+    return Object.assign(
       normalize(camelizeKeys(response.body), user),
       extractPagination(response)
     );
   },
 
   normalizeUserArrayResponse(response) {
-    return assign(
+    return Object.assign(
       normalize(camelizeKeys(response.body), arrayOf(user)),
       extractPagination(response)
     );
   },
 
   normalizeRepoResponse(response) {
-    return assign(
+    return Object.assign(
       normalize(camelizeKeys(response.body), repo),
       extractPagination(response)
     );
   },
 
   normalizeRepoArrayResponse(response) {
-    return assign(
+    return Object.assign(
       normalize(camelizeKeys(response.body), arrayOf(repo)),
       extractPagination(response)
     );

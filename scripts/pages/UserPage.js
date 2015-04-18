@@ -30,7 +30,7 @@ class UserPage extends React.Component {
   userDidChange(props) {
     const userLogin = parseLogin(props.params);
 
-    UserActionCreators.requestUser(userLogin, ['name', 'avatarUrl']);
+    UserActionCreators.requestUser(userLogin, [ 'name', 'avatarUrl' ]);
     RepoActionCreators.requestStarredReposPage(userLogin, true);
   }
 
@@ -78,7 +78,9 @@ class UserPage extends React.Component {
         }
 
         {!isEmpty && (isFetching || !isLastPage) &&
-          <button onClick={this.handleLoadMoreClick.bind(this)} disabled={isFetching}>
+          <button
+            onClick={this.handleLoadMoreClick.bind(this)}
+            disabled={isFetching}>
             {isFetching ? 'Loading...' : 'Load more'}
           </button>
         }
@@ -123,7 +125,7 @@ const getState = ({ params }) => {
 };
 
 export default connectToStores(UserPage,
-  [UserStore, StarredReposByUserStore, RepoStore],
+  [ UserStore, StarredReposByUserStore, RepoStore ],
   pickProps,
   getState
 );

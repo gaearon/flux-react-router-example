@@ -3,26 +3,26 @@
   "version": "0.2.0",
   "description": "A sample app featuring Flux and React Router",
   "dependencies": {
+    "babel-runtime": "^5.1.10",
     "flux": "^2.0.1",
     "humps": "0.0.1",
     "normalizr": "^0.1.2",
-    "object-assign": "^2.0.0",
     "react": "^0.13.1",
     "react-document-title": "^1.0.0",
-    "react-router": "^0.13.1",
-    "superagent": "^1.1.0",
+    "react-router": "^0.13.2",
+    "superagent": "^1.2.0",
     "underscore": "^1.8.2"
   },
   "devDependencies": {
-    "babel-core": "^4.7.9",
-    "babel-loader": "^4.1.0",
+    "babel-core": "^5.1.10",
+    "babel-loader": "^5.0.0",
     "react-hot-loader": "^1.1.5",
-    "webpack": "^1.5.3",
-    "webpack-dev-server": "^1.7.0"
+    "webpack": "^1.8.4",
+    "webpack-dev-server": "^1.8.0"
   },
   "scripts": {
     "start": "node server.js",
-    "build": "./node_modules/.bin/webpack --config webpack.config.production.js"
+    "build": "webpack --config webpack.config.production.js"
   },
   "repository": {
     "type": "git",

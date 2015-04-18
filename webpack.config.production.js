@@ -1,3 +1,4 @@
+/*eslint-disable no-var*/
 var path = require('path');
 var webpack = require('webpack');
 
@@ -10,7 +11,7 @@ module.exports = {
     publicPath: '/'
   },
   resolve: {
-    extensions: ['', '.js']
+    extensions: [ '', '.js' ]
   },
   plugins: [
     new webpack.optimize.OccurenceOrderPlugin(),
@@ -27,7 +28,7 @@ module.exports = {
   ],
   module: {
     loaders: [
-      { test: /\.jsx?$/, loaders: ['babel'], exclude: /node_modules/ }
+      { test: /\.jsx?$/, loaders: ['babel-loader'], exclude: /node_modules/ }
     ]
   }
 };

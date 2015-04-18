@@ -1,4 +1,7 @@
 {
+  "ecmaFeatures": {
+    "jsx": true
+  },
   "env": {
     "browser": true,
     "es6": true,
@@ -7,9 +10,18 @@
   "parser": "babel-eslint",
   "rules": {
     "eol-last": 2,
+    "max-len": [2, 80, 4],
     "no-underscore-dangle": [0],
     "no-var": 2,
     "quotes": [2, "single"],
-    "strict": 2
+    "space-in-brackets": [2, "always", {
+      "singleValue": false,
+      "objectsInArrays": false,
+      "arraysInArrays": false,
+      "arraysInObjects": true,
+      "objectsInObjects": true,
+      "propertyName": false
+    }],
+    "strict": 2,
   }
 }

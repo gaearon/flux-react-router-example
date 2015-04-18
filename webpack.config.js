@@ -1,3 +1,4 @@
+/*eslint-disable no-var*/
 var webpack = require('webpack');
 
 module.exports = {
@@ -17,11 +18,15 @@ module.exports = {
     new webpack.NoErrorsPlugin()
   ],
   resolve: {
-    extensions: ['', '.js']
+    extensions: [ '', '.js' ]
   },
   module: {
     loaders: [
-      { test: /\.js$/, loaders: ['react-hot', 'babel'], exclude: /node_modules/ }
+      {
+        test: /\.js$/,
+        loaders: [ 'react-hot', 'babel-loader' ],
+        exclude: /node_modules/
+      }
     ]
   }
 };

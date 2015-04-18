@@ -76,7 +76,9 @@ class RepoPage extends React.Component {
         }
 
         {!isEmpty && (isFetching || !isLastPage) &&
-          <button onClick={this.handleLoadMoreClick.bind(this)} disabled={isFetching}>
+          <button
+            onClick={this.handleLoadMoreClick.bind(this)}
+            disabled={isFetching}>
             {isFetching ? 'Loading...' : 'Load more'}
           </button>
         }
@@ -121,7 +123,7 @@ const getState = ({ params }) => {
 };
 
 export default connectToStores(RepoPage,
-  [RepoStore, StargazersByRepoStore, UserStore],
+  [ RepoStore, StargazersByRepoStore, UserStore ],
   pickProps,
   getState
 );

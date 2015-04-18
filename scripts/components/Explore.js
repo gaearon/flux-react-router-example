@@ -3,6 +3,7 @@
 import React from 'react';
 
 const DEFAULT_LOGIN = 'gaearon';
+const GITHUB_REPO = 'https://github.com/gaearon/flux-react-router-example';
 const parseFullName = (params) => {
   if (!params.login) {
     return DEFAULT_LOGIN;
@@ -14,6 +15,7 @@ const parseFullName = (params) => {
 class Explore extends React.Component {
 
   constructor(props) {
+    super(props);
     this.state = {
       loginOrRepo: parseFullName(props.params)
     };
@@ -28,7 +30,7 @@ class Explore extends React.Component {
           onKeyUp={this.handleKeyUp.bind(this)}
           defaultValue={this.state.loginOrRepo} />
         <button onClick={this.handleGoClick.bind(this)}>Go!</button>
-        <p>Code on <a href='https://github.com/gaearon/flux-react-router-example' target='_blank'>Github</a>.</p>
+        <p>Code on <a href={GITHUB_REPO} target='_blank'>Github</a>.</p>
       </div>
     );
   }
@@ -41,7 +43,7 @@ class Explore extends React.Component {
 
   handleGoClick() {
     let val = React.findDOMNode(this.refs.loginOrRepo).value;
-    this.setState({loginOrRepo: val});
+    this.setState({ loginOrRepo: val });
     this.props.transitionTo('/' + val);
   }
 }

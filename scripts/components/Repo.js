@@ -23,11 +23,11 @@ class Repo extends React.Component {
     return (
       <div className='Repo'>
         <h3>
-          <Link to='repo' params={{login: owner.login, name: repo.name}}>
+          <Link to='repo' params={{ login: owner.login, name: repo.name }}>
             {repo.name}
           </Link>
           {' by '}
-          <Link to='user' params={{login: owner.login}}>
+          <Link to='user' params={{ login: owner.login }}>
             {owner.login}
           </Link>
         </h3>
