@@ -28,32 +28,25 @@ export default class Explore extends React.Component {
     router: PropTypes.func.isRequired
   }
 
-  constructor() {
+  constructor(props) {
     super();
+    // Using `props` to initialize state is usually an anti-pattern,
+    // however the only purpose here is to provide an initial value
+    // to the input field (synchronization is not the goal here).
+    this.state = {
+      loginOrRepo: parseFullName(props.params)
+    };
 
     this.handleKeyUp = this.handleKeyUp.bind(this);
+    this.handleOnChange = this.handleOnChange.bind(this);
     this.handleGoClick = this.handleGoClick.bind(this);
+    this.getInputValue = this.getInputValue.bind(this);
   }
 
-  // FIXME: update input when URL changes.
-  //
-  // What we want is the `input` field to reflect
-  // the current URL and still be editable by the user.
-  //
-  // Since we want the user to edit the field, we have to
-  // use an `uncontrolled` component (and provide a
-  // `defaultValue` to initialize the field).
-  //
-  // Problem here is that we can't programmatically update
-  // the field with other values. To do that, we would have
-  // to use a `controlled` component with a `value`,
-  // but this will prevent the user to change the field.
-  //
-  // To enable user input in this case, we have to provide
-  // an `onChange` event, which is triggered whenever the
-  // user types something (and we can't check the key event here).
-  //
-  // Any idea?
+  componentWillReceiveProps(nextProps) {
+    this.setState({ loginOrRepo: parseFullName(nextProps.params) });
+  }
+
   render() {
     return (
       <div className='Explore'>
@@ -62,7 +55,8 @@ export default class Explore extends React.Component {
           size='45'
           ref='loginOrRepo'
           onKeyUp={this.handleKeyUp}
-          defaultValue={parseFullName(this.props.params)} />
+          onChange={this.handleOnChange}
+          value={this.state.loginOrRepo} />
         <button onClick={this.handleGoClick}>Go!</button>
         <p>Code on <a href={GITHUB_REPO} target='_blank'>Github</a>.</p>
       </div>
@@ -75,8 +69,18 @@ export default class Explore extends React.Component {
     }
   }
 
+  handleOnChange() {
+    // Just to update the internal state of the component in order
+    // to reflect the input field value to the user input.
+    // This is because we are using a `Controlled` component.
+    this.setState({ loginOrRepo: this.getInputValue() });
+  }
+
   handleGoClick() {
-    const val = React.findDOMNode(this.refs.loginOrRepo).value;
-    this.context.router.transitionTo(`/${val}`);
+    this.context.router.transitionTo(`/${this.getInputValue()}`);
+  }
+
+  getInputValue() {
+    return React.findDOMNode(this.refs.loginOrRepo).value;
   }
 }
