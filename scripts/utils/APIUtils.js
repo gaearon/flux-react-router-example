@@ -13,7 +13,7 @@ repo.define({
   owner: user
 });
 
-function extractPagination (response) {
+function extractPagination(response) {
   const { link } = response.headers;
   if (!link) {
     return null;

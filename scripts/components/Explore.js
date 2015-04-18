@@ -5,7 +5,7 @@ import React, { PropTypes } from 'react';
 const DEFAULT_LOGIN = 'gaearon';
 const GITHUB_REPO = 'https://github.com/gaearon/flux-react-router-example';
 
-function parseFullName (params) {
+function parseFullName(params) {
   if (!params.login) {
     return DEFAULT_LOGIN;
   }

@@ -11,7 +11,7 @@ import RepoStore from '../stores/RepoStore';
 import DocumentTitle from 'react-document-title';
 import connectToStores from '../utils/connectToStores';
 
-function parseFullName (params) {
+function parseFullName(params) {
   return params.login + '/' + params.name;
 }
 
@@ -27,7 +27,7 @@ class RepoPage extends React.Component {
     stargazers: PropTypes.arrayOf(PropTypes.object).isRequired
   }
 
-  constructor () {
+  constructor() {
     super();
 
     this.handleLoadMoreClick = this.handleLoadMoreClick.bind(this);
@@ -115,11 +115,11 @@ if (module.makeHot) {
   RepoPage = module.makeHot(RepoPage);
 }
 
-function pickProps ({ params }) {
+function pickProps({ params }) {
   return { params };
 }
 
-function getState ({ params }) {
+function getState({ params }) {
   const repoFullName = parseFullName(params);
   const stargazers = StargazersByRepoStore.getUsers(repoFullName);
   const repo = RepoStore.get(repoFullName);

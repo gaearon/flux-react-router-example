@@ -11,7 +11,7 @@ import UserStore from '../stores/UserStore';
 import connectToStores from '../utils/connectToStores';
 import DocumentTitle from 'react-document-title';
 
-function parseLogin (params) {
+function parseLogin(params) {
   return params.login;
 }
 
@@ -26,7 +26,7 @@ class UserPage extends React.Component {
     starredOwners: PropTypes.arrayOf(PropTypes.object).isRequired
   }
 
-  constructor () {
+  constructor() {
     super();
 
     this.handleLoadMoreClick = this.handleLoadMoreClick.bind(this);
@@ -116,11 +116,11 @@ if (module.makeHot) {
   UserPage = module.makeHot(UserPage);
 }
 
-function pickProps ({ params }) {
+function pickProps({ params }) {
   return { params };
 }
 
-function getState ({ params }) {
+function getState({ params }) {
   const login = parseLogin(params);
 
   const user = UserStore.get(login);

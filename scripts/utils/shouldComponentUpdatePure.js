@@ -20,7 +20,7 @@ import shallowEqual from 'react/lib/shallowEqual';
  * @param {Object} nextState
  * @return {boolean}
  */
-export default function shouldComponentUpdatePure (nextProps, nextState) {
+export default function shouldComponentUpdatePure(nextProps, nextState) {
   return !shallowEqual(this.props, nextProps) ||
          !shallowEqual(this.state, nextState);
 }
