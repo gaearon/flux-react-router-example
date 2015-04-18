@@ -29,40 +29,38 @@ function extractPagination (response) {
   };
 }
 
-export default {
-  request(endpoint) {
-    if (endpoint.indexOf(API_ROOT) === -1) {
-      endpoint = API_ROOT + endpoint;
-    }
-
-    return superagent(endpoint);
-  },
-
-  normalizeUserResponse(response) {
-    return Object.assign(
-      normalize(camelizeKeys(response.body), user),
-      extractPagination(response)
-    );
-  },
-
-  normalizeUserArrayResponse(response) {
-    return Object.assign(
-      normalize(camelizeKeys(response.body), arrayOf(user)),
-      extractPagination(response)
-    );
-  },
-
-  normalizeRepoResponse(response) {
-    return Object.assign(
-      normalize(camelizeKeys(response.body), repo),
-      extractPagination(response)
-    );
-  },
-
-  normalizeRepoArrayResponse(response) {
-    return Object.assign(
-      normalize(camelizeKeys(response.body), arrayOf(repo)),
-      extractPagination(response)
-    );
+export function request(endpoint) {
+  if (endpoint.indexOf(API_ROOT) === -1) {
+    endpoint = API_ROOT + endpoint;
   }
-};
+
+  return superagent(endpoint);
+}
+
+export function normalizeUserResponse(response) {
+  return Object.assign(
+    normalize(camelizeKeys(response.body), user),
+    extractPagination(response)
+  );
+}
+
+export function normalizeUserArrayResponse(response) {
+  return Object.assign(
+    normalize(camelizeKeys(response.body), arrayOf(user)),
+    extractPagination(response)
+  );
+}
+
+export function normalizeRepoResponse(response) {
+  return Object.assign(
+    normalize(camelizeKeys(response.body), repo),
+    extractPagination(response)
+  );
+}
+
+export function normalizeRepoArrayResponse(response) {
+  return Object.assign(
+    normalize(camelizeKeys(response.body), arrayOf(repo)),
+    extractPagination(response)
+  );
+}
