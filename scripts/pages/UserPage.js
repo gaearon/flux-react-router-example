@@ -26,6 +26,12 @@ class UserPage extends React.Component {
     starredOwners: PropTypes.arrayOf(PropTypes.object).isRequired
   }
 
+  constructor () {
+    super();
+
+    this.handleLoadMoreClick = this.handleLoadMoreClick.bind(this);
+  }
+
   componentDidMount() {
     this.userDidChange.call(this, this.props);
   }
@@ -88,7 +94,7 @@ class UserPage extends React.Component {
 
         {!isEmpty && (isFetching || !isLastPage) &&
           <button
-            onClick={this.handleLoadMoreClick.bind(this)}
+            onClick={this.handleLoadMoreClick}
             disabled={isFetching}>
             {isFetching ? 'Loading...' : 'Load more'}
           </button>

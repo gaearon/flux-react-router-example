@@ -28,6 +28,8 @@ export default (Component, stores, pickProps, getState) => {
     constructor(props) {
       super(props);
       this.state = this.getStateFromStores(props);
+
+      this.handleStoresChanged = this.handleStoresChanged.bind(this);
     }
 
     getStateFromStores(props) {
@@ -36,7 +38,7 @@ export default (Component, stores, pickProps, getState) => {
 
     componentDidMount() {
       stores.forEach(store =>
-        store.addChangeListener(this.handleStoresChanged.bind(this))
+        store.addChangeListener(this.handleStoresChanged)
       );
     }
 
@@ -48,7 +50,7 @@ export default (Component, stores, pickProps, getState) => {
 
     componentWillUnmount() {
       stores.forEach(store =>
-        store.removeChangeListener(this.handleStoresChanged.bind(this))
+        store.removeChangeListener(this.handleStoresChanged)
       );
     }
 

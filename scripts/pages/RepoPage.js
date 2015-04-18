@@ -27,6 +27,12 @@ class RepoPage extends React.Component {
     stargazers: PropTypes.arrayOf(PropTypes.object).isRequired
   }
 
+  constructor () {
+    super();
+
+    this.handleLoadMoreClick = this.handleLoadMoreClick.bind(this);
+  }
+
   componentDidMount() {
     this.repoDidChange.call(this, this.props);
   }
@@ -87,7 +93,7 @@ class RepoPage extends React.Component {
 
         {!isEmpty && (isFetching || !isLastPage) &&
           <button
-            onClick={this.handleLoadMoreClick.bind(this)}
+            onClick={this.handleLoadMoreClick}
             disabled={isFetching}>
             {isFetching ? 'Loading...' : 'Load more'}
           </button>

@@ -23,6 +23,9 @@ export default class Explore extends React.Component {
     this.state = {
       loginOrRepo: parseFullName(props.params)
     };
+
+    this.handleKeyUp = this.handleKeyUp.bind(this);
+    this.handleGoClick = this.handleGoClick.bind(this);
   }
 
   render() {
@@ -31,9 +34,9 @@ export default class Explore extends React.Component {
         <p>Type a username or repo full name and hit 'Go':</p>
         <input
           ref='loginOrRepo'
-          onKeyUp={this.handleKeyUp.bind(this)}
+          onKeyUp={this.handleKeyUp}
           defaultValue={this.state.loginOrRepo} />
-        <button onClick={this.handleGoClick.bind(this)}>Go!</button>
+        <button onClick={this.handleGoClick}>Go!</button>
         <p>Code on <a href={GITHUB_REPO} target='_blank'>Github</a>.</p>
       </div>
     );
@@ -41,7 +44,7 @@ export default class Explore extends React.Component {
 
   handleKeyUp(e) {
     if (e.keyCode === 13) {
-      this.handleGoClick.call(this);
+      this.handleGoClick();
     }
   }
 
