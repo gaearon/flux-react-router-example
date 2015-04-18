@@ -1,6 +1,7 @@
 'use strict';
 
 import React, { PropTypes } from 'react';
+import shouldComponentUpdatePure from '../utils/shouldComponentUpdatePure';
 
 const DEFAULT_LOGIN = 'gaearon';
 const GITHUB_REPO = 'https://github.com/gaearon/flux-react-router-example';
@@ -15,6 +16,8 @@ function parseFullName(params) {
 // TODO: update input when URL changes
 export default class Explore extends React.Component {
 
+  shouldComponentUpdate = shouldComponentUpdatePure
+
   static propTypes = {
     params: PropTypes.shape({
       login: PropTypes.string,
@@ -26,11 +29,8 @@ export default class Explore extends React.Component {
     router: PropTypes.func.isRequired
   }
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      loginOrRepo: parseFullName(props.params)
-    };
+  constructor() {
+    super();
 
     this.handleKeyUp = this.handleKeyUp.bind(this);
     this.handleGoClick = this.handleGoClick.bind(this);
@@ -41,9 +41,10 @@ export default class Explore extends React.Component {
       <div className='Explore'>
         <p>Type a username or repo full name and hit 'Go':</p>
         <input
+          size='45'
           ref='loginOrRepo'
           onKeyUp={this.handleKeyUp}
-          defaultValue={this.state.loginOrRepo} />
+          defaultValue={parseFullName(this.props.params)} />
         <button onClick={this.handleGoClick}>Go!</button>
         <p>Code on <a href={GITHUB_REPO} target='_blank'>Github</a>.</p>
       </div>
@@ -58,7 +59,6 @@ export default class Explore extends React.Component {
 
   handleGoClick() {
     const val = React.findDOMNode(this.refs.loginOrRepo).value;
-    this.setState({ loginOrRepo: val });
     this.context.router.transitionTo(`/${val}`);
   }
 }
