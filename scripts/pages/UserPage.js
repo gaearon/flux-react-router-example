@@ -11,9 +11,9 @@ import UserStore from '../stores/UserStore';
 import connectToStores from '../utils/connectToStores';
 import DocumentTitle from 'react-document-title';
 
-const parseLogin = (params) => {
+function parseLogin (params) {
   return params.login;
-};
+}
 
 class UserPage extends React.Component {
 
@@ -116,11 +116,11 @@ if (module.makeHot) {
   UserPage = module.makeHot(UserPage);
 }
 
-const pickProps = ({ params }) => {
+function pickProps ({ params }) {
   return { params };
-};
+}
 
-const getState = ({ params }) => {
+function getState ({ params }) {
   const login = parseLogin(params);
 
   const user = UserStore.get(login);
@@ -128,7 +128,7 @@ const getState = ({ params }) => {
   const starredOwners = starred.map(repo => UserStore.get(repo.owner));
 
   return { user, starred, starredOwners };
-};
+}
 
 export default connectToStores(UserPage,
   [ UserStore, StarredReposByUserStore, RepoStore ],

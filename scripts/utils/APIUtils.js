@@ -13,7 +13,7 @@ repo.define({
   owner: user
 });
 
-const extractPagination = (response) => {
+function extractPagination (response) {
   const { link } = response.headers;
   if (!link) {
     return null;
@@ -27,7 +27,7 @@ const extractPagination = (response) => {
   return {
     nextPageUrl: nextLink.split(';')[0].slice(1, -1)
   };
-};
+}
 
 export default {
   request(endpoint) {

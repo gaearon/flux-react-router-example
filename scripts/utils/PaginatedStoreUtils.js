@@ -9,7 +9,7 @@ const PROXIED_PAGINATED_LIST_METHODS = [
   'isExpectingPage', 'isLastPage'
 ];
 
-const createListStoreSpec = ({ getList, callListMethod }) => {
+function createListStoreSpec ({ getList, callListMethod }) {
   const spec = { getList };
 
   PROXIED_PAGINATED_LIST_METHODS.forEach(method => {
@@ -19,7 +19,7 @@ const createListStoreSpec = ({ getList, callListMethod }) => {
   });
 
   return spec;
-};
+}
 
 export default {
   /**

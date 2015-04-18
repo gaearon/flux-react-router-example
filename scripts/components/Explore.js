@@ -4,12 +4,13 @@ import React, { PropTypes } from 'react';
 
 const DEFAULT_LOGIN = 'gaearon';
 const GITHUB_REPO = 'https://github.com/gaearon/flux-react-router-example';
-const parseFullName = (params) => {
+
+function parseFullName (params) {
   if (!params.login) {
     return DEFAULT_LOGIN;
   }
   return params.login + (params.name ? '/' + params.name : '');
-};
+}
 
 // TODO: update input when URL changes
 export default class Explore extends React.Component {
@@ -49,8 +50,8 @@ export default class Explore extends React.Component {
   }
 
   handleGoClick() {
-    let val = React.findDOMNode(this.refs.loginOrRepo).value;
+    const val = React.findDOMNode(this.refs.loginOrRepo).value;
     this.setState({ loginOrRepo: val });
-    this.props.transitionTo('/' + val);
+    this.props.transitionTo(`/${val}`);
   }
 }

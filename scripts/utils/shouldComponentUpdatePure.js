@@ -7,8 +7,9 @@ import shallowEqual from 'react/lib/shallowEqual';
  * as a ES7 Class Property.
  *
  * ```js
+ * import shouldComponentUpdatePure from './utils/shouldComponentUpdatePure'
  * class Foo extends React.Component {
- *   shouldComponentUpdate = core.utils.shouldComponentUpdatePure
+ *   shouldComponentUpdate = shouldComponentUpdatePure
  *
  *   render () {}
  * }
