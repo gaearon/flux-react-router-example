@@ -9,8 +9,7 @@ export default class App extends React.Component {
 
   static propTypes = {
     params: PropTypes.object.isRequired,
-    query: PropTypes.object.isRequired,
-    transitionTo: PropTypes.func.isRequired
+    query: PropTypes.object.isRequired
   }
 
   render() {

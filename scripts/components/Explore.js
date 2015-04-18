@@ -16,7 +16,14 @@ function parseFullName(params) {
 export default class Explore extends React.Component {
 
   static propTypes = {
-    transitionTo: PropTypes.func.isRequired
+    params: PropTypes.shape({
+      login: PropTypes.string,
+      name: PropTypes.string
+    })
+  }
+
+  static contextTypes = {
+    router: PropTypes.func.isRequired
   }
 
   constructor(props) {
@@ -52,6 +59,6 @@ export default class Explore extends React.Component {
   handleGoClick() {
     const val = React.findDOMNode(this.refs.loginOrRepo).value;
     this.setState({ loginOrRepo: val });
-    this.props.transitionTo(`/${val}`);
+    this.context.router.transitionTo(`/${val}`);
   }
 }
