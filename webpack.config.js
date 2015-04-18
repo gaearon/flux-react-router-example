@@ -7,7 +7,7 @@ module.exports = {
     'webpack/hot/only-dev-server',
     './scripts/index'
   ],
-  devtool: 'eval',
+  devtool: 'inline-source-map',
   output: {
     path: __dirname,
     filename: 'bundle.js',
