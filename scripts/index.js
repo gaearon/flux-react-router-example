@@ -8,5 +8,6 @@ router.run((Handler, state) => {
   // haven't found a better solution yet though.
   // Since `Explore` component is not in the Router `context`
   // we have to pass it along, somehow.
-  React.render(<Handler {...state} transitionTo={transitionTo} />, document.body);
+  React.render(
+    <Handler {...state} transitionTo={transitionTo} />, document.body);
 });

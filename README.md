@@ -26,6 +26,8 @@ npm install
 npm start
 ```
 
+> You can lint the project with `npm run lint`. If you want to have also the [SublimeText plugin](https://medium.com/@dan_abramov/lint-like-it-s-2015-6987d44c5b48), make sure you have those dependencies globally installed (see `optionalDependencies` in `package.json` for the required versions.
+
 ### How I Classify Stores
 
 I tried to avoid some of the duplication I've seen in other Flux example, specifically in Stores.

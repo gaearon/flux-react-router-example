@@ -45,9 +45,9 @@ export default {
   },
 
   /**
-   * Creates an indexed paginated store that represents a one-many relationship
-   * (e.g. user's posts). Expects foreign key ID to be passed as first parameter
-   * to store methods.
+   * Creates an indexed paginated store that represents a one-many
+   * relationship (e.g. user's posts). Expects foreign key ID to be
+   * passed as first parameter to store methods.
    */
   createIndexedListStore(spec) {
     const lists = {};
@@ -66,7 +66,8 @@ export default {
     const callListMethod = (method, args) => {
       const id = args.shift();
       if (typeof id === 'undefined') {
-        throw new Error('Indexed pagination store methods expect ID as first parameter.');
+        throw new Error(
+          'Indexed pagination store methods expect ID as first parameter.');
       }
 
       const list = getList(id);
@@ -117,4 +118,4 @@ export default {
       }
     };
   }
-}
+};

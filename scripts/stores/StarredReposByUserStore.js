@@ -4,7 +4,8 @@ import AppDispatcher from '../dispatcher/AppDispatcher';
 import ActionTypes from '../constants/ActionTypes';
 import RepoStore from './RepoStore';
 import UserStore from './UserStore';
-import { createIndexedListStore, createListActionHandler } from '../utils/PaginatedStoreUtils';
+import { createIndexedListStore, createListActionHandler }
+  from '../utils/PaginatedStoreUtils';
 
 const StarredReposByUserStore = createIndexedListStore({
   getRepos(userLogin) {
@@ -19,7 +20,7 @@ const handleListAction = createListActionHandler({
 });
 
 AppDispatcher.register((payload) => {
-  AppDispatcher.waitFor([RepoStore.dispatchToken, UserStore.dispatchToken]);
+  AppDispatcher.waitFor([ RepoStore.dispatchToken, UserStore.dispatchToken ]);
 
   const { action } = payload;
   const { login } = action;
