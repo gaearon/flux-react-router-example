@@ -13,7 +13,6 @@ function parseFullName(params) {
   return params.login + (params.name ? '/' + params.name : '');
 }
 
-// TODO: update input when URL changes
 export default class Explore extends React.Component {
 
   shouldComponentUpdate = shouldComponentUpdatePure
@@ -36,6 +35,25 @@ export default class Explore extends React.Component {
     this.handleGoClick = this.handleGoClick.bind(this);
   }
 
+  // FIXME: update input when URL changes.
+  //
+  // What we want is the `input` field to reflect
+  // the current URL and still be editable by the user.
+  //
+  // Since we want the user to edit the field, we have to
+  // use an `uncontrolled` component (and provide a
+  // `defaultValue` to initialize the field).
+  //
+  // Problem here is that we can't programmatically update
+  // the field with other values. To do that, we would have
+  // to use a `controlled` component with a `value`,
+  // but this will prevent the user to change the field.
+  //
+  // To enable user input in this case, we have to provide
+  // an `onChange` event, which is triggered whenever the
+  // user types something (and we can't check the key event here).
+  //
+  // Any idea?
   render() {
     return (
       <div className='Explore'>
