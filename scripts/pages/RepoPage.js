@@ -30,16 +30,18 @@ class RepoPage extends React.Component {
   constructor() {
     super();
 
+    this.repoDidChange = this.repoDidChange.bind(this);
+    this.renderStargazers = this.renderStargazers.bind(this);
     this.handleLoadMoreClick = this.handleLoadMoreClick.bind(this);
   }
 
   componentDidMount() {
-    this.repoDidChange.call(this, this.props);
+    this.repoDidChange(this.props);
   }
 
   componentWillReceiveProps(nextProps) {
     if (parseFullName(nextProps.params) !== parseFullName(this.props.params)) {
-      this.repoDidChange.call(this, nextProps);
+      this.repoDidChange(nextProps);
     }
   }
 
@@ -63,7 +65,7 @@ class RepoPage extends React.Component {
           }
 
           <h1>Stargazers</h1>
-          {this.renderStargazers.call(this)}
+          {this.renderStargazers()}
         </div>
       </DocumentTitle>
     );

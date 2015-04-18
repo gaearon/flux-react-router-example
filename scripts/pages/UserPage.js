@@ -29,16 +29,18 @@ class UserPage extends React.Component {
   constructor() {
     super();
 
+    this.userDidChange = this.userDidChange.bind(this);
+    this.renderStarredRepos = this.renderStarredRepos.bind(this);
     this.handleLoadMoreClick = this.handleLoadMoreClick.bind(this);
   }
 
   componentDidMount() {
-    this.userDidChange.call(this, this.props);
+    this.userDidChange(this.props);
   }
 
   componentWillReceiveProps(nextProps) {
     if (parseLogin(nextProps.params) !== parseLogin(this.props.params)) {
-      this.userDidChange.call(this, nextProps);
+      this.userDidChange(nextProps);
     }
   }
 
@@ -62,7 +64,7 @@ class UserPage extends React.Component {
           }
 
           <h1>Starred repos</h1>
-          {this.renderStarredRepos.call(this)}
+          {this.renderStarredRepos()}
         </div>
       </DocumentTitle>
     );
