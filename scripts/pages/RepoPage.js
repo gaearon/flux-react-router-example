@@ -17,6 +17,16 @@ const parseFullName = (params) => {
 
 class RepoPage extends React.Component {
 
+  static propTypes = {
+    params: PropTypes.shape({
+      login: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired
+    }).isRequired,
+    repo: PropTypes.object,
+    owner: PropTypes.object,
+    stargazers: PropTypes.arrayOf(PropTypes.object).isRequired
+  }
+
   componentDidMount() {
     this.repoDidChange.call(this, this.props);
   }
@@ -91,16 +101,6 @@ class RepoPage extends React.Component {
     UserActionCreators.requestStargazerPage(fullName);
   }
 }
-// or declare it in the constructor
-RepoPage.propTypes = {
-  params: PropTypes.shape({
-    login: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired
-  }).isRequired,
-  repo: PropTypes.object,
-  owner: PropTypes.object,
-  stargazers: PropTypes.arrayOf(PropTypes.object).isRequired
-};
 
 if (module.makeHot) {
   // Because we don't export RepoPage directly,

@@ -1,6 +1,6 @@
 'use strict';
 
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 const DEFAULT_LOGIN = 'gaearon';
 const GITHUB_REPO = 'https://github.com/gaearon/flux-react-router-example';
@@ -12,7 +12,11 @@ const parseFullName = (params) => {
 };
 
 // TODO: update input when URL changes
-class Explore extends React.Component {
+export default class Explore extends React.Component {
+
+  static propTypes = {
+    transitionTo: PropTypes.func.isRequired
+  }
 
   constructor(props) {
     super(props);
@@ -47,9 +51,3 @@ class Explore extends React.Component {
     this.props.transitionTo('/' + val);
   }
 }
-// or declare it in the constructor
-Explore.propTypes = {
-  transitionTo: React.PropTypes.func.isRequired
-};
-
-export default Explore;

@@ -17,6 +17,15 @@ const parseLogin = (params) => {
 
 class UserPage extends React.Component {
 
+  static propTypes = {
+    params: PropTypes.shape({
+      login: PropTypes.string.isRequired
+    }).isRequired,
+    user: PropTypes.object,
+    starred: PropTypes.arrayOf(PropTypes.object).isRequired,
+    starredOwners: PropTypes.arrayOf(PropTypes.object).isRequired
+  }
+
   componentDidMount() {
     this.userDidChange.call(this, this.props);
   }
@@ -93,15 +102,6 @@ class UserPage extends React.Component {
     RepoActionCreators.requestStarredReposPage(login);
   }
 }
-// or declare it in the constructor
-UserPage.propTypes = {
-  params: PropTypes.shape({
-    login: PropTypes.string.isRequired
-  }).isRequired,
-  user: PropTypes.object,
-  starred: PropTypes.arrayOf(PropTypes.object).isRequired,
-  starredOwners: PropTypes.arrayOf(PropTypes.object).isRequired
-};
 
 if (module.makeHot) {
   // Because we don't export UserPage directly,

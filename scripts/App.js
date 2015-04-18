@@ -5,7 +5,14 @@ import Explore from './components/Explore';
 import DocumentTitle from 'react-document-title';
 import { RouteHandler } from 'react-router';
 
-class App extends React.Component {
+export default class App extends React.Component {
+
+  static propTypes = {
+    params: PropTypes.object.isRequired,
+    query: PropTypes.object.isRequired,
+    transitionTo: PropTypes.func.isRequired
+  }
+
   render() {
     return (
       <DocumentTitle title='Sample App'>
@@ -18,11 +25,3 @@ class App extends React.Component {
     );
   }
 }
-// or declare it in the constructor
-App.propTypes = {
-  params: PropTypes.object.isRequired,
-  query: PropTypes.object.isRequired,
-  transitionTo: PropTypes.func.isRequired
-};
-
-export default App;

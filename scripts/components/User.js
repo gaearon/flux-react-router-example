@@ -4,7 +4,11 @@ import React, { PropTypes } from 'react';
 import shallowEqual from 'react/lib/shallowEqual';
 import { Link } from 'react-router';
 
-class User extends React.Component {
+export default class User extends React.Component {
+
+  static propTypes = {
+    user: PropTypes.object.isRequired
+  }
 
   // TODO: make it either a HigherOrderComponent
   // or a subclass of `React.Component` and extend from it
@@ -32,9 +36,3 @@ class User extends React.Component {
     );
   }
 }
-// or declare it in the constructor
-User.propTypes = {
-  user: PropTypes.object.isRequired
-};
-
-export default User;

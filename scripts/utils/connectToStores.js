@@ -22,7 +22,9 @@ const isMounted = (component) => {
 };
 
 export default (Component, stores, pickProps, getState) => {
-  class StoreConnector extends React.Component {
+
+  return class StoreConnector extends React.Component {
+
     constructor(props) {
       super(props);
       this.state = this.getStateFromStores(props);
@@ -59,7 +61,5 @@ export default (Component, stores, pickProps, getState) => {
     render() {
       return <Component {...this.props} {...this.state} />;
     }
-  }
-
-  return StoreConnector;
+  };
 };

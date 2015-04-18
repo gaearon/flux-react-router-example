@@ -4,7 +4,12 @@ import React, { PropTypes } from 'react';
 import shallowEqual from 'react/lib/shallowEqual';
 import { Link } from 'react-router';
 
-class Repo extends React.Component {
+export default class Repo extends React.Component {
+
+  static propTypes = {
+    repo: PropTypes.object.isRequired,
+    owner: PropTypes.object.isRequired
+  }
 
   // TODO: make it either a HigherOrderComponent
   // or a subclass of `React.Component` and extend from it
@@ -36,10 +41,3 @@ class Repo extends React.Component {
     );
   }
 }
-// or declare it in the constructor
-Repo.propTypes = {
-  repo: PropTypes.object.isRequired,
-  owner: PropTypes.object.isRequired
-};
-
-export default Repo;
