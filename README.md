@@ -82,8 +82,8 @@ I made a few helpers though.
 This method gives you the most basic Store:
 
 ```javascript
-const createStore = (spec) => {
-  let store = assign({
+function createStore(spec) {
+  let store = Object.assign({
     emitChange() {
       this.emit(CHANGE_EVENT);
     },
@@ -115,7 +115,7 @@ I use it to create all Stores.
 Small helpers useful for Content Stores.
 
 ```javascript
-const isInBag = (bag, id, fields) => {
+function isInBag(bag, id, fields) {
   let item = bag[id];
   if (!bag[id]) {
     return false;
@@ -128,7 +128,7 @@ const isInBag = (bag, id, fields) => {
   }
 }
 
-const mergeIntoBag = (bag, entities, transform) => {
+function mergeIntoBag(bag, entities, transform) {
   if (!transform) {
     transform = (x) => x;
   }
@@ -141,7 +141,7 @@ const mergeIntoBag = (bag, entities, transform) => {
     if (!bag.hasOwnProperty(key)) {
       bag[key] = transform(entities[key]);
     } else if (!shallowEqual(bag[key], entities[key])) {
-      bag[key] = transform(assign({}, bag[key], entities[key]));
+      bag[key] = transform(Object.assign({}, bag[key], entities[key]));
     }
   }
 }
@@ -223,7 +223,7 @@ const PROXIED_PAGINATED_LIST_METHODS = [
   'isExpectingPage', 'isLastPage'
 ];
 
-const createListStoreSpec = ({ getList, callListMethod }) => {
+function createListStoreSpec({ getList, callListMethod }) {
   const spec = { getList };
 
   PROXIED_PAGINATED_LIST_METHODS.forEach(method => {
@@ -233,104 +233,101 @@ const createListStoreSpec = ({ getList, callListMethod }) => {
   });
 
   return spec;
-};
+}
 
-export default {
-  /**
-   * Creates a simple paginated store that represents a global list (e.g. feed).
-   */
-  createListStore(spec) {
-    const list = new PaginatedList();
+/**
+ * Creates a simple paginated store that represents a global list (e.g. feed).
+ */
+export function createListStore(spec) {
+  const list = new PaginatedList();
 
-    const getList = () => {
-      return list;
-    };
+  const getList = () => list;
 
-    const callListMethod = (method, args) => {
-      return list[method].call(list, args);
-    };
+  const callListMethod = (method, args) => {
+    return list[method].call(list, args);
+  };
 
-    return createStore(
-      assign(createListStoreSpec({
-        getList,
-        callListMethod
-      }), spec)
-    );
-  },
+  return createStore(
+    Object.assign(createListStoreSpec({
+      getList,
+      callListMethod
+    }), spec)
+  );
+}
 
-  /**
-   * Creates an indexed paginated store that represents a one-many relationship
-   * (e.g. user's posts). Expects foreign key ID to be passed as first parameter
-   * to store methods.
-   */
-  createIndexedListStore(spec) {
-    const lists = {};
-    const prefix = 'ID_';
+/**
+ * Creates an indexed paginated store that represents a one-many
+ * relationship (e.g. user's posts). Expects foreign key ID to be
+ * passed as first parameter to store methods.
+ */
+export function createIndexedListStore(spec) {
+  const lists = {};
+  const prefix = 'ID_';
 
-    const getList = (id) => {
-      const key = prefix + id;
+  const getList = (id) => {
+    const key = prefix + id;
 
-      if (!lists[key]) {
-        lists[key] = new PaginatedList();
-      }
+    if (!lists[key]) {
+      lists[key] = new PaginatedList();
+    }
 
-      return lists[key];
-    };
+    return lists[key];
+  };
 
-    const callListMethod = (method, args) => {
-      const id = args.shift();
-      if (typeof id === 'undefined') {
-        throw new Error('Indexed pagination store methods expect ID as first parameter.');
-      }
+  const callListMethod = (method, args) => {
+    const id = args.shift();
+    if (typeof id === 'undefined') {
+      throw new Error(
+        'Indexed pagination store methods expect ID as first parameter.');
+    }
 
-      const list = getList(id);
-      return list[method].call(list, args);
-    };
+    const list = getList(id);
+    return list[method].call(list, args);
+  };
 
-    return createStore(
-      assign(createListStoreSpec({
-        getList,
-        callListMethod
-      }), spec)
-    );
-  },
+  return createStore(
+    Object.assign(createListStoreSpec({
+      getList,
+      callListMethod
+    }), spec)
+  );
+}
 
-  /**
-   * Creates a handler that responds to list store pagination actions.
-   */
-  createListActionHandler(actions) {
-    const {
-      request: requestAction,
-      error: errorAction,
-      success: successAction
-    } = actions;
+/**
+ * Creates a handler that responds to list store pagination actions.
+ */
+export function createListActionHandler(actions) {
+  const {
+    request: requestAction,
+    error: errorAction,
+    success: successAction
+  } = actions;
 
-    invariant(requestAction, 'Pass a valid request action.');
-    invariant(errorAction, 'Pass a valid error action.');
-    invariant(successAction, 'Pass a valid success action.');
+  invariant(requestAction, 'Pass a valid request action.');
+  invariant(errorAction, 'Pass a valid error action.');
+  invariant(successAction, 'Pass a valid success action.');
 
-    return (action, list, emitChange) => {
-      switch (action.type) {
-      case requestAction:
-        list.expectPage();
-        emitChange();
-        break;
+  return (action, list, emitChange) => {
+    switch (action.type) {
+    case requestAction:
+      list.expectPage();
+      emitChange();
+      break;
 
-      case errorAction:
-        list.cancelPage();
-        emitChange();
-        break;
+    case errorAction:
+      list.cancelPage();
+      emitChange();
+      break;
 
-      case successAction:
-        list.receivePage(
-          action.response.result,
-          action.response.nextPageUrl
-        );
-        emitChange();
-        break;
-      }
-    };
-  }
+    case successAction:
+      list.receivePage(
+        action.response.result,
+        action.response.nextPageUrl
+      );
+      emitChange();
+      break;
+    }
+  };
 }
 ```
 
@@ -339,10 +336,15 @@ export default {
 A [higher-order component](https://gist.github.com/sebmarkbage/ef0bf1f338a7182b6775) that allows components to tune in to Stores they're interested in.
 
 ```javascript
-const connectToStores = (Component, stores, pickProps, getState) => {
-  class StoreConnector extends React.Component {
+function connectToStores(Component, stores, pickProps, getState) {
+
+  return class StoreConnector extends React.Component {
+
     constructor(props) {
+      super(props);
       this.state = this.getStateFromStores(props);
+
+      this.handleStoresChanged = this.handleStoresChanged.bind(this);
     }
 
     getStateFromStores(props) {
@@ -351,10 +353,8 @@ const connectToStores = (Component, stores, pickProps, getState) => {
 
     componentDidMount() {
       stores.forEach(store =>
-        store.addChangeListener(this.handleStoresChanged.bind(this))
+        store.addChangeListener(this.handleStoresChanged)
       );
-
-      this.setState(this.getStateFromStores(this.props));
     }
 
     componentWillReceiveProps(nextProps) {
@@ -365,7 +365,7 @@ const connectToStores = (Component, stores, pickProps, getState) => {
 
     componentWillUnmount() {
       stores.forEach(store =>
-        store.removeChangeListener(this.handleStoresChanged.bind(this))
+        store.removeChangeListener(this.handleStoresChanged)
       );
     }
 
@@ -376,8 +376,6 @@ const connectToStores = (Component, stores, pickProps, getState) => {
     render() {
       return <Component {...this.props} {...this.state} />;
     }
-  }
-
-  return StoreConnector;
-};
+  };
+}
 ```

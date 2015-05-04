@@ -3,7 +3,8 @@
 import React from 'react';
 import shallowEqual from 'react/lib/shallowEqual';
 
-export default (Component, stores, pickProps, getState) => {
+export default function connectToStores(
+  Component, stores, pickProps, getState) {
 
   return class StoreConnector extends React.Component {
 
@@ -44,4 +45,4 @@ export default (Component, stores, pickProps, getState) => {
       return <Component {...this.props} {...this.state} />;
     }
   };
-};
+}
