@@ -19,12 +19,10 @@ const handleListAction = createListActionHandler({
   error: ActionTypes.REQUEST_STARRED_REPOS_PAGE_ERROR
 });
 
-AppDispatcher.register((payload) => {
+AppDispatcher.register(action => {
   AppDispatcher.waitFor([ RepoStore.dispatchToken, UserStore.dispatchToken ]);
 
-  const { action } = payload;
   const { login } = action;
-
   if (login) {
     handleListAction(
       action,

@@ -16,7 +16,7 @@ export default {
     // it is fired for consistency. You might want to use it later,
     // e.g. to show a spinner or have a more detailed log.
 
-    AppDispatcher.handleViewAction({
+    AppDispatcher.dispatch({
       type: ActionTypes.REQUEST_USER,
       login
     });
@@ -34,7 +34,7 @@ export default {
       return;
     }
 
-    AppDispatcher.handleViewAction({
+    AppDispatcher.dispatch({
       type: ActionTypes.REQUEST_STARGAZER_PAGE,
       fullName
     });

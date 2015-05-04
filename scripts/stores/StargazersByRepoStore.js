@@ -19,12 +19,10 @@ const handleListAction = createListActionHandler({
   error: ActionTypes.REQUEST_STARGAZER_PAGE_ERROR
 });
 
-AppDispatcher.register((payload) => {
+AppDispatcher.register(action => {
   AppDispatcher.waitFor([ RepoStore.dispatchToken, UserStore.dispatchToken ]);
 
-  const { action } = payload;
   const { fullName } = action;
-
   if (fullName) {
     handleListAction(
       action,

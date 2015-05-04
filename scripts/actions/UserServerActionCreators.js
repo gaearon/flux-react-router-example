@@ -5,7 +5,7 @@ import ActionTypes from '../constants/ActionTypes';
 
 export default {
   handleUserSuccess(response) {
-    AppDispatcher.handleServerAction({
+    AppDispatcher.dispatch({
       type: ActionTypes.REQUEST_USER_SUCCESS,
       response
     });
@@ -14,13 +14,13 @@ export default {
   handleUserError(err) {
     console.log(err);
 
-    AppDispatcher.handleServerAction({
+    AppDispatcher.dispatch({
       type: ActionTypes.REQUEST_USER_ERROR
     });
   },
 
   handleStargazerPageSuccess(fullName, response) {
-    AppDispatcher.handleServerAction({
+    AppDispatcher.dispatch({
       type: ActionTypes.REQUEST_STARGAZER_PAGE_SUCCESS,
       fullName,
       response
@@ -30,7 +30,7 @@ export default {
   handleStargazerPageError(fullName, err) {
     console.log(err);
 
-    AppDispatcher.handleServerAction({
+    AppDispatcher.dispatch({
       type: ActionTypes.REQUEST_STARGAZER_PAGE_ERROR,
       fullName
     });

@@ -5,7 +5,7 @@ import ActionTypes from '../constants/ActionTypes';
 
 export default {
   handleRepoSuccess(response) {
-    AppDispatcher.handleServerAction({
+    AppDispatcher.dispatch({
       type: ActionTypes.REQUEST_REPO_SUCCESS,
       response
     });
@@ -14,13 +14,13 @@ export default {
   handleRepoError(err) {
     console.log(err);
 
-    AppDispatcher.handleServerAction({
+    AppDispatcher.dispatch({
       type: ActionTypes.REQUEST_REPO_ERROR
     });
   },
 
   handleStarredReposPageSuccess(login, response) {
-    AppDispatcher.handleServerAction({
+    AppDispatcher.dispatch({
       type: ActionTypes.REQUEST_STARRED_REPOS_PAGE_SUCCESS,
       login,
       response
@@ -30,7 +30,7 @@ export default {
   handleStarredReposPageError(login, err) {
     console.log(err);
 
-    AppDispatcher.handleServerAction({
+    AppDispatcher.dispatch({
       type: ActionTypes.REQUEST_STARRED_REPOS_PAGE_ERROR,
       login
     });
