@@ -5,8 +5,10 @@ import { Dispatcher } from 'flux';
 class AppDispatcher extends Dispatcher {
   dispatch(action) {
     // In production, thanks to DefinePlugin in webpack.config.production.js,
-    // this comparison will turn `false`, and UglifyJS will cut it out as dead code.
+    // this comparison will turn `false`, and UglifyJS will cut logging out
+    // as part of dead code elimination.
     if (process.env.NODE_ENV !== 'production') {
+      // Logging all actions is useful for figuring out mistakes in code.
       // All data that flows into our application comes in form of actions.
       // Actions are just plain JavaScript objects describing “what happened”.
       // Think of them as newspapers.
