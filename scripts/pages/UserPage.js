@@ -34,7 +34,7 @@ class UserPage extends React.Component {
     this.handleLoadMoreClick = this.handleLoadMoreClick.bind(this);
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.userDidChange(this.props);
   }
 

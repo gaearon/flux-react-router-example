@@ -35,7 +35,7 @@ class RepoPage extends React.Component {
     this.handleLoadMoreClick = this.handleLoadMoreClick.bind(this);
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.repoDidChange(this.props);
   }
 
