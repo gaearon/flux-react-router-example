@@ -110,13 +110,6 @@ class RepoPage extends React.Component {
   }
 }
 
-if (module.makeHot) {
-  // Because we don't export RepoPage directly,
-  // we need to tell React Hot Loader about it,
-  // or the state will be lost on file change.
-  RepoPage = module.makeHot(RepoPage);
-}
-
 function pickProps({ params }) {
   return { params };
 }

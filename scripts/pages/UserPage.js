@@ -111,13 +111,6 @@ class UserPage extends React.Component {
   }
 }
 
-if (module.makeHot) {
-  // Because we don't export UserPage directly,
-  // we need to tell React Hot Loader about it,
-  // or the state will be lost on file change.
-  UserPage = module.makeHot(UserPage);
-}
-
 function pickProps({ params }) {
   return { params };
 }
