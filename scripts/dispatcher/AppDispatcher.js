@@ -1,7 +1,6 @@
 'use strict';
 
 import { Dispatcher } from 'flux';
-import PayloadSources from '../constants/PayloadSources';
 
 class AppDispatcher extends Dispatcher {
   dispatch(action) {

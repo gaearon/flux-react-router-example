@@ -11,7 +11,8 @@
     "react-document-title": "^1.0.0",
     "react-router": "^0.13.2",
     "superagent": "^1.2.0",
-    "underscore": "^1.8.2"
+    "underscore": "^1.8.2",
+    "whatwg-fetch": "^0.7.0"
   },
   "devDependencies": {
     "babel-core": "^5.1.10",
