@@ -1,4 +1,4 @@
-/*eslint-disable no-var*/
+/* eslint-disable no-var, strict */
 'use strict';
 
 var webpack = require('webpack');
@@ -11,7 +11,7 @@ var server = new WebpackDevServer(webpack(config), {
   historyApiFallback: true
 });
 
-server.listen(3000, 'localhost', function(err) {
+server.listen(3000, 'localhost', function (err) {
   if (err) {
     console.log(err);
   }

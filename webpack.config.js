@@ -1,4 +1,5 @@
-/*eslint-disable no-var*/
+/* eslint-disable no-var */
+var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
@@ -7,11 +8,11 @@ module.exports = {
     'webpack/hot/only-dev-server',
     './scripts/index'
   ],
-  devtool: 'inline-source-map',
+  devtool: 'eval-source-map',
   output: {
     path: __dirname,
     filename: 'bundle.js',
-    publicPath: '/scripts/'
+    publicPath: '/static/'
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
@@ -21,12 +22,10 @@ module.exports = {
     extensions: [ '', '.js' ]
   },
   module: {
-    loaders: [
-      {
-        test: /\.js$/,
-        loaders: [ 'react-hot', 'babel-loader' ],
-        exclude: /node_modules/
-      }
-    ]
+    loaders: [{
+      test: /\.jsx?$/,
+      loaders: ['react-hot', 'babel'],
+      include: path.join(__dirname, 'scripts')
+    }]
   }
 };

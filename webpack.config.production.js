@@ -1,4 +1,4 @@
-/*eslint-disable no-var*/
+/* eslint-disable no-var */
 var path = require('path');
 var webpack = require('webpack');
 
@@ -6,7 +6,7 @@ module.exports = {
   devtool: 'source-map',
   entry: './scripts/index',
   output: {
-    path: path.join(__dirname, '/dist'),
+    path: path.join(__dirname, 'dist'),
     filename: 'bundle.js',
     publicPath: '/'
   },
@@ -27,8 +27,10 @@ module.exports = {
     })
   ],
   module: {
-    loaders: [
-      { test: /\.jsx?$/, loaders: ['babel-loader'], exclude: /node_modules/ }
-    ]
+    loaders: [{
+      test: /\.jsx?$/,
+      loaders: ['babel'],
+      include: path.join(__dirname, 'scripts')
+    }]
   }
 };
