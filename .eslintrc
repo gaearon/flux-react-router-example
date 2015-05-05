@@ -1,6 +1,7 @@
 {
   "ecmaFeatures": {
-    "jsx": true
+    "jsx": true,
+    "modules": true
   },
   "env": {
     "browser": true,
@@ -29,16 +30,11 @@
     "react/self-closing-comp": 2,
     "react/wrap-multilines": 2,
     "quotes": [2, "single"],
-    "space-before-function-parentheses": [2, "never"],
-    "space-in-brackets": [2, "always", {
-      "singleValue": false,
-      "objectsInArrays": false,
-      "arraysInArrays": false,
-      "arraysInObjects": true,
-      "objectsInObjects": true,
-      "propertyName": false
+    "space-before-function-paren": [2, {
+      "anonymous": "always",
+      "named": "never"
     }],
-    "strict": 2,
+    "strict": [2, "global"]
   },
   "plugins": [
     "react"

@@ -1,20 +1,13 @@
-'use strict';
-
 import { Schema, arrayOf, normalize } from 'normalizr';
 import { camelizeKeys } from 'humps';
-import superagent from 'superagent';
+import 'core-js/es6/promise';
+import 'whatwg-fetch';
 
-const API_ROOT = 'https://api.github.com/';
-
-const user = new Schema('users', { idAttribute: 'login' });
-const repo = new Schema('repos', { idAttribute: 'fullName' });
-
-repo.define({
-  owner: user
-});
-
-function extractPagination(response) {
-  const { link } = response.headers;
+/**
+ * Extracts the next page URL from Github API response.
+ */
+function getNextPageUrl(response) {
+  const link = response.headers.get('link');
   if (!link) {
     return null;
   }
@@ -24,43 +17,57 @@ function extractPagination(response) {
     return null;
   }
 
-  return {
-    nextPageUrl: nextLink.split(';')[0].slice(1, -1)
-  };
+  return nextLink.split(';')[0].slice(1, -1);
 }
 
-export function request(endpoint) {
-  if (endpoint.indexOf(API_ROOT) === -1) {
-    endpoint = API_ROOT + endpoint;
+// We use this Normalizr schemas to transform API responses from a nested form
+// to a flat form where repos and users are placed in `entities`, and nested
+// JSON objects are replaced with their IDs. This is very convenient for
+// consumption by Stores, because each Store can just grab entities of its kind.
+
+// Read more about Normalizr: https://github.com/gaearon/normalizr
+
+const userSchema = new Schema('users', { idAttribute: 'login' });
+const repoSchema = new Schema('repos', { idAttribute: 'fullName' });
+repoSchema.define({
+  owner: userSchema
+});
+
+const API_ROOT = 'https://api.github.com/';
+
+/**
+ * Fetches an API response and normalizes the result JSON according to schema.
+ */
+function fetchAndNormalize(url, schema) {
+  if (url.indexOf(API_ROOT) === -1) {
+    url = API_ROOT + url;
   }
 
-  return superagent(endpoint);
-}
+  return fetch(url).then(response =>
+    response.json().then(json => {
+      const camelizedJson = camelizeKeys(json);
+      const nextPageUrl = getNextPageUrl(response) || undefined;
 
-export function normalizeUserResponse(response) {
-  return Object.assign(
-    normalize(camelizeKeys(response.body), user),
-    extractPagination(response)
+      return {
+        ...normalize(camelizedJson, schema),
+        nextPageUrl
+      };
+    })
   );
 }
 
-export function normalizeUserArrayResponse(response) {
-  return Object.assign(
-    normalize(camelizeKeys(response.body), arrayOf(user)),
-    extractPagination(response)
-  );
+export function fetchUser(url) {
+  return fetchAndNormalize(url, userSchema);
 }
 
-export function normalizeRepoResponse(response) {
-  return Object.assign(
-    normalize(camelizeKeys(response.body), repo),
-    extractPagination(response)
-  );
+export function fetchUserArray(url) {
+  return fetchAndNormalize(url, arrayOf(userSchema));
 }
 
-export function normalizeRepoArrayResponse(response) {
-  return Object.assign(
-    normalize(camelizeKeys(response.body), arrayOf(repo)),
-    extractPagination(response)
-  );
+export function fetchRepo(url) {
+  return fetchAndNormalize(url, repoSchema);
+}
+
+export function fetchRepoArray(url) {
+  return fetchAndNormalize(url, arrayOf(repoSchema));
 }

@@ -1,6 +1,4 @@
-'use strict';
-
-import keyMirror from 'react/lib/keyMirror';
+import keyMirror from 'keymirror';
 
 export default keyMirror({
   REQUEST_USER: null,

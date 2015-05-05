@@ -1,55 +1,86 @@
-'use strict';
-
 import React, { PropTypes } from 'react';
-import Repo from '../components/Repo';
-import User from '../components/User';
-import RepoActionCreators from '../actions/RepoActionCreators';
-import UserActionCreators from '../actions/UserActionCreators';
+import * as RepoActionCreators from '../actions/RepoActionCreators';
+import * as UserActionCreators from '../actions/UserActionCreators';
 import StargazersByRepoStore from '../stores/StargazersByRepoStore';
 import UserStore from '../stores/UserStore';
 import RepoStore from '../stores/RepoStore';
+import Repo from '../components/Repo';
+import User from '../components/User';
 import DocumentTitle from 'react-document-title';
+/* eslint-disable no-unused-vars */
 import connectToStores from '../utils/connectToStores';
+/* eslint-enable no-unused-vars */
 
 function parseFullName(params) {
-  return params.login + '/' + params.name;
+  return `${params.login}/${params.name}`;
 }
 
-class RepoPage extends React.Component {
+/**
+ * Requests data from server for current props.
+ */
+function requestData(props) {
+  const { params } = props;
+  const fullName = parseFullName(params);
 
+  RepoActionCreators.requestRepo(fullName);
+  UserActionCreators.requestStargazerPage(fullName, true);
+}
+
+/**
+ * Retrieves state from stores for current props.
+ */
+function getState(props) { // eslint-disable-line no-unused-vars
+  const fullName = parseFullName(props.params);
+
+  const repo = RepoStore.get(fullName);
+  const owner = repo && UserStore.get(repo.owner);
+
+  const stargazers = StargazersByRepoStore.getUsers(fullName);
+  const isLoadingStargazers = StargazersByRepoStore.isExpectingPage(fullName);
+  const isLastPageOfStargazers = StargazersByRepoStore.isLastPage(fullName);
+
+  return {
+    repo,
+    owner,
+    stargazers,
+    isLoadingStargazers,
+    isLastPageOfStargazers
+  };
+}
+
+/* eslint-disable no-unused-vars */
+const stores = [RepoStore, StargazersByRepoStore, UserStore];
+@connectToStores(stores, getState)
+/* eslint-enable no-unused-vars */
+export default class RepoPage {
   static propTypes = {
+    // Injected by React Router:
     params: PropTypes.shape({
       login: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired
     }).isRequired,
+
+    // Injected by @connectToStores:
     repo: PropTypes.object,
     owner: PropTypes.object,
-    stargazers: PropTypes.arrayOf(PropTypes.object).isRequired
-  }
+    stargazers: PropTypes.arrayOf(PropTypes.object).isRequired,
+    isLoadingStargazers: PropTypes.bool.isRequired,
+    isLastPageOfStargazers: PropTypes.bool.isRequired
+  };
 
   constructor() {
-    super();
-
-    this.repoDidChange = this.repoDidChange.bind(this);
     this.renderStargazers = this.renderStargazers.bind(this);
     this.handleLoadMoreClick = this.handleLoadMoreClick.bind(this);
   }
 
   componentWillMount() {
-    this.repoDidChange(this.props);
+    requestData(this.props);
   }
 
   componentWillReceiveProps(nextProps) {
     if (parseFullName(nextProps.params) !== parseFullName(this.props.params)) {
-      this.repoDidChange(nextProps);
+      requestData(nextProps);
     }
-  }
-
-  repoDidChange(props) {
-    const fullName = parseFullName(props.params);
-
-    RepoActionCreators.requestRepo(fullName);
-    UserActionCreators.requestStargazerPage(fullName, true);
   }
 
   render() {
@@ -72,12 +103,12 @@ class RepoPage extends React.Component {
   }
 
   renderStargazers() {
-    const { stargazers } = this.props;
-    const fullName = parseFullName(this.props);
-
+    const {
+      stargazers,
+      isLoadingStargazers: isLoading,
+      isLastPageOfStargazers: isLastPage
+    } = this.props;
     const isEmpty = stargazers.length === 0;
-    const isFetching = StargazersByRepoStore.isExpectingPage(fullName);
-    const isLastPage = StargazersByRepoStore.isLastPage(fullName);
 
     return (
       <div>
@@ -85,19 +116,18 @@ class RepoPage extends React.Component {
           <User key={user.login} user={user} />
         )}
 
-        {isEmpty && !isFetching &&
+        {isEmpty && !isLoading &&
           <span>None :-(</span>
         }
 
-        {isEmpty && isFetching &&
+        {isEmpty && isLoading &&
           <span>Loading...</span>
         }
 
-        {!isEmpty && (isFetching || !isLastPage) &&
-          <button
-            onClick={this.handleLoadMoreClick}
-            disabled={isFetching}>
-            {isFetching ? 'Loading...' : 'Load more'}
+        {!isEmpty && (isLoading || !isLastPage) &&
+          <button onClick={this.handleLoadMoreClick}
+                  disabled={isLoading}>
+            {isLoading ? 'Loading...' : 'Load more'}
           </button>
         }
       </div>
@@ -109,22 +139,3 @@ class RepoPage extends React.Component {
     UserActionCreators.requestStargazerPage(fullName);
   }
 }
-
-function pickProps({ params }) {
-  return { params };
-}
-
-function getState({ params }) {
-  const repoFullName = parseFullName(params);
-  const stargazers = StargazersByRepoStore.getUsers(repoFullName);
-  const repo = RepoStore.get(repoFullName);
-  const owner = repo && UserStore.get(repo.owner);
-
-  return { repo, owner, stargazers };
-}
-
-export default connectToStores(RepoPage,
-  [ RepoStore, StargazersByRepoStore, UserStore ],
-  pickProps,
-  getState
-);

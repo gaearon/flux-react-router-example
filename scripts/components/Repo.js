@@ -1,17 +1,14 @@
-'use strict';
-
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
-import shouldComponentUpdatePure from '../utils/shouldComponentUpdatePure';
+import shouldPureComponentUpdate from 'react-pure-render/function';
 
-export default class Repo extends React.Component {
-
-  shouldComponentUpdate = shouldComponentUpdatePure
-
+export default class Repo {
   static propTypes = {
     repo: PropTypes.object.isRequired,
     owner: PropTypes.object.isRequired
   }
+
+  shouldComponentUpdate = shouldPureComponentUpdate;
 
   render() {
     const { repo, owner } = this.props;

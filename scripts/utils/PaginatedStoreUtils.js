@@ -1,5 +1,3 @@
-'use strict';
-
 import { createStore } from './StoreUtils';
 import PaginatedList from '../utils/PaginatedList';
 import invariant from 'react/lib/invariant';
@@ -62,10 +60,10 @@ export function createIndexedListStore(spec) {
 
   const callListMethod = (method, args) => {
     const id = args.shift();
-    if (typeof id === 'undefined') {
-      throw new Error(
-        'Indexed pagination store methods expect ID as first parameter.');
-    }
+    invariant(
+      typeof id !== 'undefined',
+      'Indexed pagination store methods expect ID as first parameter.'
+    );
 
     const list = getList(id);
     return list[method].call(list, args);
@@ -82,30 +80,26 @@ export function createIndexedListStore(spec) {
 /**
  * Creates a handler that responds to list store pagination actions.
  */
-export function createListActionHandler(actions) {
-  const {
-    request: requestAction,
-    error: errorAction,
-    success: successAction
-  } = actions;
+export function createListActionHandler(types) {
+  const { request, failure, success } = types;
 
-  invariant(requestAction, 'Pass a valid request action.');
-  invariant(errorAction, 'Pass a valid error action.');
-  invariant(successAction, 'Pass a valid success action.');
+  invariant(request, 'Pass a valid request action type.');
+  invariant(failure, 'Pass a valid failure action type.');
+  invariant(success, 'Pass a valid success action type.');
 
   return (action, list, emitChange) => {
     switch (action.type) {
-    case requestAction:
+    case request:
       list.expectPage();
       emitChange();
       break;
 
-    case errorAction:
+    case failure:
       list.cancelPage();
       emitChange();
       break;
 
-    case successAction:
+    case success:
       list.receivePage(
         action.response.result,
         action.response.nextPageUrl

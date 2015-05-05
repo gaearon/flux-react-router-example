@@ -1,33 +1,34 @@
-'use strict';
-
 import { each, isFunction } from 'underscore';
 import { EventEmitter } from 'events';
-import shallowEqual from 'react/lib/shallowEqual';
+import shallowEqual from 'react-pure-render/shallowEqual';
 
 const CHANGE_EVENT = 'change';
 
 export function createStore(spec) {
-  let store = Object.assign({
+  const emitter = new EventEmitter();
+  emitter.setMaxListeners(0);
+
+  const store = Object.assign({
     emitChange() {
-      this.emit(CHANGE_EVENT);
+      emitter.emit(CHANGE_EVENT);
     },
 
     addChangeListener(callback) {
-      this.on(CHANGE_EVENT, callback);
+      emitter.on(CHANGE_EVENT, callback);
     },
 
     removeChangeListener(callback) {
-      this.removeListener(CHANGE_EVENT, callback);
+      emitter.removeListener(CHANGE_EVENT, callback);
     }
-  }, spec, EventEmitter.prototype);
+  }, spec);
 
+  // Auto-bind store methods for convenience
   each(store, (val, key) => {
     if (isFunction(val)) {
       store[key] = store[key].bind(store);
     }
   });
 
-  store.setMaxListeners(0);
   return store;
 }
 
@@ -44,20 +45,16 @@ export function isInBag(bag, id, fields) {
   }
 }
 
-export function mergeIntoBag(bag, entities, transform) {
-  if (!transform) {
-    transform = (x) => x;
-  }
-
-  for (let key in entities) {
-    if (!entities.hasOwnProperty(key)) {
+export function mergeIntoBag(bag, entities) {
+  for (let id in entities) {
+    if (!entities.hasOwnProperty(id)) {
       continue;
     }
 
-    if (!bag.hasOwnProperty(key)) {
-      bag[key] = transform(entities[key]);
-    } else if (!shallowEqual(bag[key], entities[key])) {
-      bag[key] = transform(Object.assign({}, bag[key], entities[key]));
+    if (!bag.hasOwnProperty(id)) {
+      bag[id] = entities[id];
+    } else if (!shallowEqual(bag[id], entities[id])) {
+      bag[id] = Object.assign({}, bag[id], entities[id]);
     }
   }
 }

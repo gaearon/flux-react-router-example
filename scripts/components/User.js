@@ -1,16 +1,13 @@
-'use strict';
-
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
-import shouldComponentUpdatePure from '../utils/shouldComponentUpdatePure';
+import shouldPureComponentUpdate from 'react-pure-render/function';
 
-export default class User extends React.Component {
-
-  shouldComponentUpdate = shouldComponentUpdatePure
-
+export default class User {
   static propTypes = {
     user: PropTypes.object.isRequired
-  }
+  };
+
+  shouldComponentUpdate = shouldPureComponentUpdate;
 
   render() {
     const { user } = this.props;

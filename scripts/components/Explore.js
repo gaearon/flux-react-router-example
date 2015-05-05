@@ -1,7 +1,5 @@
-'use strict';
-
-import React, { PropTypes } from 'react';
-import shouldComponentUpdatePure from '../utils/shouldComponentUpdatePure';
+import React, { Component, PropTypes, findDOMNode } from 'react';
+import shouldPureComponentUpdate from 'react-pure-render/function';
 
 const DEFAULT_LOGIN = 'gaearon';
 const GITHUB_REPO = 'https://github.com/gaearon/flux-react-router-example';
@@ -10,53 +8,55 @@ function parseFullName(params) {
   if (!params.login) {
     return DEFAULT_LOGIN;
   }
+
   return params.login + (params.name ? '/' + params.name : '');
 }
 
-export default class Explore extends React.Component {
-
-  shouldComponentUpdate = shouldComponentUpdatePure
-
+export default class Explore extends Component {
   static propTypes = {
     params: PropTypes.shape({
       login: PropTypes.string,
       name: PropTypes.string
     })
-  }
+  };
 
   static contextTypes = {
     router: PropTypes.func.isRequired
-  }
+  };
+
+  shouldComponentUpdate = shouldPureComponentUpdate;
 
   constructor(props) {
-    super();
-    // Using `props` to initialize state is usually an anti-pattern,
-    // however the only purpose here is to provide an initial value
-    // to the input field (synchronization is not the goal here).
-    this.state = {
-      loginOrRepo: parseFullName(props.params)
-    };
+    super(props);
 
     this.handleKeyUp = this.handleKeyUp.bind(this);
     this.handleOnChange = this.handleOnChange.bind(this);
     this.handleGoClick = this.handleGoClick.bind(this);
     this.getInputValue = this.getInputValue.bind(this);
+
+    // State that depends on props is often an anti-pattern, but in our case
+    // that's what we need to we can update the input both in response to route
+    // change and in response to user typing.
+    this.state = {
+      loginOrRepo: parseFullName(props.params)
+    };
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ loginOrRepo: parseFullName(nextProps.params) });
+    this.setState({
+      loginOrRepo: parseFullName(nextProps.params)
+    });
   }
 
   render() {
     return (
       <div className='Explore'>
         <p>Type a username or repo full name and hit 'Go':</p>
-        <input
-          size='45'
-          ref='loginOrRepo'
-          onKeyUp={this.handleKeyUp}
-          onChange={this.handleOnChange}
-          value={this.state.loginOrRepo} />
+        <input size='45'
+               ref='loginOrRepo'
+               onKeyUp={this.handleKeyUp}
+               onChange={this.handleOnChange}
+               value={this.state.loginOrRepo} />
         <button onClick={this.handleGoClick}>Go!</button>
         <p>Code on <a href={GITHUB_REPO} target='_blank'>Github</a>.</p>
       </div>
@@ -70,10 +70,12 @@ export default class Explore extends React.Component {
   }
 
   handleOnChange() {
-    // Just to update the internal state of the component in order
-    // to reflect the input field value to the user input.
-    // This is because we are using a `Controlled` component.
-    this.setState({ loginOrRepo: this.getInputValue() });
+    // Update the internal state because we are using a controlled input.
+    // This way we can update it *both* in response to user input *and*
+    // in response to navigation in `componentWillReceiveProps`.
+    this.setState({
+      loginOrRepo: this.getInputValue()
+    });
   }
 
   handleGoClick() {
@@ -81,6 +83,6 @@ export default class Explore extends React.Component {
   }
 
   getInputValue() {
-    return React.findDOMNode(this.refs.loginOrRepo).value;
+    return findDOMNode(this.refs.loginOrRepo).value;
   }
 }

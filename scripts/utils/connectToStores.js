@@ -1,48 +1,56 @@
-'use strict';
+import React, { Component } from 'react';
+import shallowEqual from 'react-pure-render/shallowEqual';
 
-import React from 'react';
-import shallowEqual from 'react/lib/shallowEqual';
+/**
+ * Exports a higher-order component that connects the component to stores.
+ * This higher-order component is most easily used as an ES7 decorator.
+ * Decorators are just a syntax sugar over wrapping class in a function call.
+ *
+ * Read more about higher-order components: https://goo.gl/qKYcHa
+ * Read more about decorators: https://github.com/wycats/javascript-decorators
+ */
+export default function connectToStores(stores, getState) {
+  return function (DecoratedComponent) {
+    const displayName =
+      DecoratedComponent.displayName ||
+      DecoratedComponent.name ||
+      'Component';
 
-export default function connectToStores(
-  Component, stores, pickProps, getState) {
+    return class StoreConnector extends Component {
+      static displayName = `connectToStores(${displayName})`;
 
-  return class StoreConnector extends React.Component {
+      constructor(props) {
+        super(props);
+        this.handleStoresChanged = this.handleStoresChanged.bind(this);
 
-    constructor(props) {
-      super(props);
-      this.state = this.getStateFromStores(props);
-
-      this.handleStoresChanged = this.handleStoresChanged.bind(this);
-    }
-
-    getStateFromStores(props) {
-      return getState(pickProps(props));
-    }
-
-    componentDidMount() {
-      stores.forEach(store =>
-        store.addChangeListener(this.handleStoresChanged)
-      );
-    }
-
-    componentWillReceiveProps(nextProps) {
-      if (!shallowEqual(pickProps(nextProps), pickProps(this.props))) {
-        this.setState(this.getStateFromStores(nextProps));
+        this.state = getState(props);
       }
-    }
 
-    componentWillUnmount() {
-      stores.forEach(store =>
-        store.removeChangeListener(this.handleStoresChanged)
-      );
-    }
+      componentWillMount() {
+        stores.forEach(store =>
+          store.addChangeListener(this.handleStoresChanged)
+        );
+      }
 
-    handleStoresChanged() {
-      this.setState(this.getStateFromStores(this.props));
-    }
+      componentWillReceiveProps(nextProps) {
+        if (!shallowEqual(nextProps, this.props)) {
+          this.setState(getState(nextProps));
+        }
+      }
 
-    render() {
-      return <Component {...this.props} {...this.state} />;
-    }
+      componentWillUnmount() {
+        stores.forEach(store =>
+          store.removeChangeListener(this.handleStoresChanged)
+        );
+      }
+
+      handleStoresChanged() {
+        this.setState(getState(this.props));
+      }
+
+      render() {
+        return <DecoratedComponent {...this.props} {...this.state} />;
+      }
+    };
   };
 }

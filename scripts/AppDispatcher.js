@@ -1,9 +1,27 @@
-'use strict';
-
 import { Dispatcher } from 'flux';
 
 class AppDispatcher extends Dispatcher {
-  dispatch(action) {
+  /**
+   * Dispatches three actions for an async operation represented by promise.
+   */
+  dispatchAsync(promise, types, action = {}) {
+    const { request, success, failure } = types;
+
+    this.dispatch(request, action);
+    promise.then(
+      response => this.dispatch(success, { ...action, response }),
+      error => this.dispatch(failure, { ...action, error })
+    );
+  }
+
+  /**
+   * Dispatches a single action.
+   */
+  dispatch(type, action = {}) {
+    if (!type) {
+      throw new Error('You forgot to specify type.');
+    }
+
     // In production, thanks to DefinePlugin in webpack.config.production.js,
     // this comparison will turn `false`, and UglifyJS will cut logging out
     // as part of dead code elimination.
@@ -12,13 +30,17 @@ class AppDispatcher extends Dispatcher {
       // All data that flows into our application comes in form of actions.
       // Actions are just plain JavaScript objects describing “what happened”.
       // Think of them as newspapers.
-      console.log(action.type, action);
+      if (action.error) {
+        console.error(type, action);
+      } else {
+        console.log(type, action);
+      }
     }
 
     // Generally, inheritance and super() calls are a terrible idea,
     // but we're only going one level deep here so it's not a big issue.
     // Try to avoid it though!
-    super.dispatch(action);
+    super.dispatch({ type, ...action });
   }
 
   // Some Flux examples have methods like `handleViewAction`

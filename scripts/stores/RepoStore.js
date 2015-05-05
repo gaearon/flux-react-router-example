@@ -1,7 +1,6 @@
-'use strict';
-
-import AppDispatcher from '../dispatcher/AppDispatcher';
+import AppDispatcher from '../AppDispatcher';
 import { createStore, mergeIntoBag, isInBag } from '../utils/StoreUtils';
+import selectn from 'selectn';
 
 const _repos = {};
 
@@ -16,12 +15,9 @@ const RepoStore = createStore({
 });
 
 RepoStore.dispatchToken = AppDispatcher.register(action => {
-  const { response } = action;
-  const entities = response && response.entities;
-  const fetchedRepos = entities && entities.repos;
-
-  if (fetchedRepos) {
-    mergeIntoBag(_repos, fetchedRepos);
+  const responseRepos = selectn('response.entities.repos', action);
+  if (responseRepos) {
+    mergeIntoBag(_repos, responseRepos);
     RepoStore.emitChange();
   }
 });

@@ -1,54 +1,85 @@
-'use strict';
-
 import React, { PropTypes } from 'react';
-import User from '../components/User';
-import Repo from '../components/Repo';
-import RepoActionCreators from '../actions/RepoActionCreators';
-import UserActionCreators from '../actions/UserActionCreators';
+import * as RepoActionCreators from '../actions/RepoActionCreators';
+import * as UserActionCreators from '../actions/UserActionCreators';
 import StarredReposByUserStore from '../stores/StarredReposByUserStore';
 import RepoStore from '../stores/RepoStore';
 import UserStore from '../stores/UserStore';
-import connectToStores from '../utils/connectToStores';
+import User from '../components/User';
+import Repo from '../components/Repo';
 import DocumentTitle from 'react-document-title';
+/* eslint-disable no-unused-vars */
+import connectToStores from '../utils/connectToStores';
+/* eslint-enable no-unused-vars */
 
 function parseLogin(params) {
   return params.login;
 }
 
-class UserPage extends React.Component {
+/**
+ * Requests data from server for current props.
+ */
+function requestData(props) {
+  const { params } = props;
+  const userLogin = parseLogin(params);
 
+  UserActionCreators.requestUser(userLogin, ['name', 'avatarUrl']);
+  RepoActionCreators.requestStarredReposPage(userLogin, true);
+}
+
+/**
+ * Retrieves state from stores for current props.
+ */
+function getState(props) { // eslint-disable-line no-unused-vars
+  const login = parseLogin(props.params);
+
+  const user = UserStore.get(login);
+
+  const starred = StarredReposByUserStore.getRepos(login);
+  const starredOwners = starred.map(repo => UserStore.get(repo.owner));
+  const isLoadingStarred = StarredReposByUserStore.isExpectingPage(login);
+  const isLastPageOfStarred = StarredReposByUserStore.isLastPage(login);
+
+  return {
+    user,
+    starred,
+    starredOwners,
+    isLoadingStarred,
+    isLastPageOfStarred
+  };
+}
+
+/* eslint-disable no-unused-vars */
+const stores = [StarredReposByUserStore, UserStore, RepoStore];
+@connectToStores(stores, getState)
+/* eslint-enable no-unused-vars */
+export default class UserPage {
   static propTypes = {
+    // Injected by React Router:
     params: PropTypes.shape({
       login: PropTypes.string.isRequired
     }).isRequired,
+
+    // Injected by @connectToStores:
     user: PropTypes.object,
     starred: PropTypes.arrayOf(PropTypes.object).isRequired,
-    starredOwners: PropTypes.arrayOf(PropTypes.object).isRequired
-  }
+    starredOwners: PropTypes.arrayOf(PropTypes.object).isRequired,
+    isLoadingStarred: PropTypes.bool.isRequired,
+    isLastPageOfStarred: PropTypes.bool.isRequired
+  };
 
   constructor() {
-    super();
-
-    this.userDidChange = this.userDidChange.bind(this);
     this.renderStarredRepos = this.renderStarredRepos.bind(this);
     this.handleLoadMoreClick = this.handleLoadMoreClick.bind(this);
   }
 
   componentWillMount() {
-    this.userDidChange(this.props);
+    requestData(this.props);
   }
 
   componentWillReceiveProps(nextProps) {
     if (parseLogin(nextProps.params) !== parseLogin(this.props.params)) {
-      this.userDidChange(nextProps);
+      requestData(nextProps);
     }
-  }
-
-  userDidChange(props) {
-    const userLogin = parseLogin(props.params);
-
-    UserActionCreators.requestUser(userLogin, [ 'name', 'avatarUrl' ]);
-    RepoActionCreators.requestStarredReposPage(userLogin, true);
   }
 
   render() {
@@ -71,12 +102,13 @@ class UserPage extends React.Component {
   }
 
   renderStarredRepos() {
-    const { starred, starredOwners, params } = this.props;
-    const login = parseLogin(params);
-
+    const {
+      starred,
+      starredOwners,
+      isLoadingStarred: isLoading,
+      isLastPageOfStarred: isLastPage
+    } = this.props;
     const isEmpty = starred.length === 0;
-    const isFetching = StarredReposByUserStore.isExpectingPage(login);
-    const isLastPage = StarredReposByUserStore.isLastPage(login);
 
     return (
       <div>
@@ -86,19 +118,18 @@ class UserPage extends React.Component {
                 owner={starredOwners[index]} />
         )}
 
-        {isEmpty && !isFetching &&
+        {isEmpty && !isLoading &&
           <span>None :-(</span>
         }
 
-        {isEmpty && isFetching &&
+        {isEmpty && isLoading &&
           <span>Loading...</span>
         }
 
-        {!isEmpty && (isFetching || !isLastPage) &&
-          <button
-            onClick={this.handleLoadMoreClick}
-            disabled={isFetching}>
-            {isFetching ? 'Loading...' : 'Load more'}
+        {!isEmpty && (isLoading || !isLastPage) &&
+          <button onClick={this.handleLoadMoreClick}
+                  disabled={isLoading}>
+            {isLoading ? 'Loading...' : 'Load more'}
           </button>
         }
       </div>
@@ -110,23 +141,3 @@ class UserPage extends React.Component {
     RepoActionCreators.requestStarredReposPage(login);
   }
 }
-
-function pickProps({ params }) {
-  return { params };
-}
-
-function getState({ params }) {
-  const login = parseLogin(params);
-
-  const user = UserStore.get(login);
-  const starred = StarredReposByUserStore.getRepos(login);
-  const starredOwners = starred.map(repo => UserStore.get(repo.owner));
-
-  return { user, starred, starredOwners };
-}
-
-export default connectToStores(UserPage,
-  [ UserStore, StarredReposByUserStore, RepoStore ],
-  pickProps,
-  getState
-);

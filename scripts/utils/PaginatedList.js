@@ -1,13 +1,14 @@
-'use strict';
-
 import { union, without } from 'underscore';
-import invariant from 'react/lib/invariant';
+import invariant from 'invariant';
 
+/**
+ * Encapsulates a paginated lists of IDs.
+ */
 export default class PaginatedList {
   constructor(ids) {
     this._ids = ids || [];
     this._pageCount = 0;
-    this._nextPageUrl = null;
+    this._nextPageUrl = undefined;
     this._isExpectingPage = false;
   }
 
@@ -28,7 +29,7 @@ export default class PaginatedList {
   }
 
   isLastPage() {
-    return this.getNextPageUrl() === null && this.getPageCount() > 0;
+    return !this.getNextPageUrl() && this.getPageCount() > 0;
   }
 
   prepend(id) {
@@ -40,28 +41,34 @@ export default class PaginatedList {
   }
 
   expectPage() {
-    invariant(!this._isExpectingPage,
+    invariant(
+      !this._isExpectingPage,
       'Cannot call expectPage twice without prior cancelPage or ' +
-      'receivePage call.');
+      'receivePage call.'
+    );
     this._isExpectingPage = true;
   }
 
   cancelPage() {
-    invariant(this._isExpectingPage,
-      'Cannot call cancelPage without prior expectPage call.');
+    invariant(
+      this._isExpectingPage,
+      'Cannot call cancelPage without prior expectPage call.'
+    );
     this._isExpectingPage = false;
   }
 
   receivePage(newIds, nextPageUrl) {
-    invariant(this._isExpectingPage,
-      'Cannot call receivePage without prior expectPage call.');
+    invariant(
+      this._isExpectingPage,
+      'Cannot call receivePage without prior expectPage call.'
+    );
 
     if (newIds.length) {
       this._ids = union(this._ids, newIds);
     }
 
     this._isExpectingPage = false;
-    this._nextPageUrl = nextPageUrl || null;
+    this._nextPageUrl = nextPageUrl;
     this._pageCount++;
   }
 }
