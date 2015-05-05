@@ -11,11 +11,11 @@ I tried to keep it close to real world (pagination, no fake localStorage APIs).
 
 There are a few bits here I was especially interested in:
 
-* It uses vanilla [Flux architecture](https://github.com/facebook/flux) and React Router](https://github.com/rackt/react-router);
+* It uses vanilla [Flux architecture](https://github.com/facebook/flux) and [React Router](https://github.com/rackt/react-router);
 * It can show user page with partial known info and load details on the go;
 * It supports pagination both for users and repos;
 * It parses Github's nested JSON responses with [Normalizr](https://github.com/gaearon/normalizr);
-* Content Stores [don't need to contain a giant `switch` with actions](https://github.com/gaearon/flux-react-router-example/blob/master/scripts/stores/UserStore.js#L25);
+* Content Stores [don't need to contain a giant `switch` with actions](https://github.com/gaearon/flux-react-router-example/blob/82a27eb85227ef85129e8bf0444e0f8d9abd6406/scripts/stores/UserStore.js#L18-L22);
 * “Back” is immediate (because all data is in Stores);
 * Router handlers are updated gracefully in `componentWillReceiveProps` if some page is requested with a different parameter;
 * [“Dumb”](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0) components use [pure rendering](https://github.com/gaearon/react-pure-render) as a performance optimization;
@@ -43,7 +43,7 @@ I found it useful to logically divide Stores into three categories:
 
 **Content Stores** hold all app entities. Everything that has an ID needs its own Content Store. Components that render individual items ask Content Stores for the fresh data.
 
-Content Stores harvest their objects from *all* server actions. For example, `UserStore` [looks into `action.response.entities.users`](https://github.com/gaearon/flux-react-router-example/blob/master/scripts/stores/UserStore.js#L25) if it exists *regardless* of which action fired. There is no need for a `switch`. [Normalizr](https://github.com/gaearon/normalizr) makes it easy to flatten any API reponses to this format.
+Content Stores harvest their objects from *all* server actions. For example, `UserStore` [looks into `action.response.entities.users`](https://github.com/gaearon/flux-react-router-example/blob/82a27eb85227ef85129e8bf0444e0f8d9abd6406/scripts/stores/UserStore.js#L18-L22) if it exists *regardless* of which action fired. There is no need for a `switch`. [Normalizr](https://github.com/gaearon/normalizr) makes it easy to flatten any API reponses to this format.
 
 ```javascript
 // Content Stores keep their data like this
