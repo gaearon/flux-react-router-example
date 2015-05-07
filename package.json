@@ -23,9 +23,7 @@
     "babel-loader": "^5.0.0",
     "react-hot-loader": "^1.1.5",
     "webpack": "^1.8.4",
-    "webpack-dev-server": "^1.8.0"
-  },
-  "optionalDependencies": {
+    "webpack-dev-server": "^1.8.0",
     "babel-eslint": "^3.0.1",
     "eslint": "~0.20.0",
     "eslint-plugin-react": "^2.1.1"
