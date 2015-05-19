@@ -1,4 +1,4 @@
-import AppDispatcher from '../AppDispatcher';
+import { register } from '../AppDispatcher';
 import { createStore, mergeIntoBag, isInBag } from '../utils/StoreUtils';
 import selectn from 'selectn';
 
@@ -14,7 +14,7 @@ const RepoStore = createStore({
   }
 });
 
-RepoStore.dispatchToken = AppDispatcher.register(action => {
+RepoStore.dispatchToken = register(action => {
   const responseRepos = selectn('response.entities.repos', action);
   if (responseRepos) {
     mergeIntoBag(_repos, responseRepos);

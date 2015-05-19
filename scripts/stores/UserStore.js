@@ -1,4 +1,4 @@
-import AppDispatcher from '../AppDispatcher';
+import { register } from '../AppDispatcher';
 import { createStore, mergeIntoBag, isInBag } from '../utils/StoreUtils';
 import selectn from 'selectn';
 
@@ -14,7 +14,7 @@ const UserStore = createStore({
   }
 });
 
-UserStore.dispatchToken = AppDispatcher.register(action => {
+UserStore.dispatchToken = register(action => {
   const responseUsers = selectn('response.entities.users', action);
   if (responseUsers) {
     mergeIntoBag(_users, responseUsers);

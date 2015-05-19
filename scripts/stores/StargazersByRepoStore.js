@@ -1,4 +1,4 @@
-import AppDispatcher from '../AppDispatcher';
+import { register, waitFor } from '../AppDispatcher';
 import ActionTypes from '../constants/ActionTypes';
 import RepoStore from './RepoStore';
 import UserStore from './UserStore';
@@ -19,10 +19,10 @@ const handleListAction = createListActionHandler({
   failure: ActionTypes.REQUEST_STARGAZER_PAGE_ERROR
 });
 
-AppDispatcher.register(action => {
+register(action => {
   // Let the entity stores consume entities first, or else by the time we
   // emit a change in IDs, they might not have entities for those IDs.
-  AppDispatcher.waitFor([RepoStore.dispatchToken, UserStore.dispatchToken]);
+  waitFor([RepoStore.dispatchToken, UserStore.dispatchToken]);
 
   const { fullName } = action;
   if (fullName) {
