@@ -7,9 +7,7 @@ import RepoStore from '../stores/RepoStore';
 import Repo from '../components/Repo';
 import User from '../components/User';
 import DocumentTitle from 'react-document-title';
-/* eslint-disable no-unused-vars */
 import connectToStores from '../utils/connectToStores';
-/* eslint-enable no-unused-vars */
 
 function parseFullName(params) {
   return `${params.login}/${params.name}`;
@@ -29,7 +27,7 @@ function requestData(props) {
 /**
  * Retrieves state from stores for current props.
  */
-function getState(props) { // eslint-disable-line no-unused-vars
+function getState(props) {
   const fullName = parseFullName(props.params);
 
   const repo = RepoStore.get(fullName);
@@ -48,10 +46,7 @@ function getState(props) { // eslint-disable-line no-unused-vars
   };
 }
 
-/* eslint-disable no-unused-vars */
-const stores = [RepoStore, StargazersByRepoStore, UserStore];
-@connectToStores(stores, getState)
-/* eslint-enable no-unused-vars */
+@connectToStores([RepoStore, StargazersByRepoStore, UserStore], getState)
 export default class RepoPage {
   static propTypes = {
     // Injected by React Router:

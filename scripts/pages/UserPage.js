@@ -7,9 +7,7 @@ import UserStore from '../stores/UserStore';
 import User from '../components/User';
 import Repo from '../components/Repo';
 import DocumentTitle from 'react-document-title';
-/* eslint-disable no-unused-vars */
 import connectToStores from '../utils/connectToStores';
-/* eslint-enable no-unused-vars */
 
 function parseLogin(params) {
   return params.login;
@@ -29,7 +27,7 @@ function requestData(props) {
 /**
  * Retrieves state from stores for current props.
  */
-function getState(props) { // eslint-disable-line no-unused-vars
+function getState(props) {
   const login = parseLogin(props.params);
 
   const user = UserStore.get(login);
@@ -48,10 +46,7 @@ function getState(props) { // eslint-disable-line no-unused-vars
   };
 }
 
-/* eslint-disable no-unused-vars */
-const stores = [StarredReposByUserStore, UserStore, RepoStore];
-@connectToStores(stores, getState)
-/* eslint-enable no-unused-vars */
+@connectToStores([StarredReposByUserStore, UserStore, RepoStore], getState)
 export default class UserPage {
   static propTypes = {
     // Injected by React Router:

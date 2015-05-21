@@ -19,14 +19,14 @@
     "whatwg-fetch": "^0.7.0"
   },
   "devDependencies": {
-    "babel-core": "^5.1.10",
+    "babel-core": "^5.4.5",
+    "babel-eslint": "^3.1.6",
     "babel-loader": "^5.0.0",
+    "eslint": "^0.21.2",
+    "eslint-plugin-react": "^2.3.0",
     "react-hot-loader": "^1.1.5",
     "webpack": "^1.8.4",
-    "webpack-dev-server": "^1.8.0",
-    "babel-eslint": "^3.0.1",
-    "eslint": "~0.20.0",
-    "eslint-plugin-react": "^2.1.1"
+    "webpack-dev-server": "^1.8.0"
   },
   "scripts": {
     "start": "node server.js",
