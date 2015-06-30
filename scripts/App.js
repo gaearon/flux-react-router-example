@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
 import Explore from './components/Explore';
 import DocumentTitle from 'react-document-title';
-import { RouteHandler } from 'react-router';
 
 export default class App {
   static propTypes = {
@@ -15,7 +14,7 @@ export default class App {
         <div className='App'>
           <Explore {...this.props} />
           <hr />
-          <RouteHandler {...this.props} />
+          {this.props.children}
         </div>
       </DocumentTitle>
     );
