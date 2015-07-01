@@ -1,12 +1,11 @@
-import React, { PropTypes } from 'react';
+import React, { PropTypes, Component } from 'react';
 import { Router, Route } from 'react-router';
 
 import App from './App';
 import RepoPage from './pages/RepoPage';
 import UserPage from './pages/UserPage';
 
-export default class Root extends React.Component {
-
+export default class Root extends Component {
   static propTypes = {
     history: PropTypes.object.isRequired
   }
@@ -15,9 +14,9 @@ export default class Root extends React.Component {
     const { history } = this.props;
     return (
       <Router history={history}>
-        <Route name='explore' path='/' handler={App}>
-          <Route name='repo' path='/:login/:name' handler={RepoPage} />
-          <Route name='user' path='/:login' handler={UserPage} />
+        <Route name='explore' path='/' component={App}>
+          <Route name='repo' path='/:login/:name' component={RepoPage} />
+          <Route name='user' path='/:login' component={UserPage} />
         </Route>
       </Router>
     );

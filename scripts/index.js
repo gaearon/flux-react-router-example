@@ -8,6 +8,6 @@ const rootEl = document.getElementById('root');
 // but switch to HTML5 history locally.
 const history = process.env.NODE_ENV === 'production' ?
   new HashHistory() :
-  new BrowserHistory()
+  new BrowserHistory();
 
 React.render(<Root history={history} />, rootEl);
