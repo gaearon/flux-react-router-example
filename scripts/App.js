@@ -4,8 +4,7 @@ import DocumentTitle from 'react-document-title';
 
 export default class App {
   static propTypes = {
-    params: PropTypes.object.isRequired,
-    query: PropTypes.object.isRequired
+    children: PropTypes.object
   };
 
   render() {

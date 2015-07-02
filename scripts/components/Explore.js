@@ -21,7 +21,7 @@ export default class Explore extends Component {
   };
 
   static contextTypes = {
-    router: PropTypes.func.isRequired
+    router: PropTypes.object.isRequired
   };
 
   shouldComponentUpdate = shouldPureComponentUpdate;
