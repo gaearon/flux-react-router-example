@@ -15,7 +15,7 @@ export default class App {
         <div className='App'>
           <Explore {...this.props} />
           <hr />
-          <RouteHandler {...this.props} />
+          {this.props.children}
         </div>
       </DocumentTitle>
     );

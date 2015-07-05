@@ -1,7 +1,13 @@
 import React from 'react';
-import router from './router';
+import { Router, Route} from 'react-router';
+import { history } from 'react-router/lib/HashHistory';
+import { browserHistory } from 'react-router/lib/BrowserHistory';
+import appRoutes from './routes';
 
 const rootEl = document.getElementById('root');
-router.run((Handler, state) =>
-  React.render(<Handler {...state} />, rootEl)
-);
+
+React.render((
+  <Router history={history}>
+   {appRoutes}
+  </Router>
+), rootEl);
