@@ -16,11 +16,11 @@ export default class Repo {
     return (
       <div className='Repo'>
         <h3>
-          <Link to='repo' params={{ login: owner.login, name: repo.name }}>
+          <Link to={`/${owner.login}/${repo.name}`}>
             {repo.name}
           </Link>
           {' by '}
-          <Link to='user' params={{ login: owner.login }}>
+          <Link to={owner.login}>
             {owner.login}
           </Link>
         </h3>
