@@ -10,9 +10,6 @@ module.exports = {
     filename: 'bundle.js',
     publicPath: '/'
   },
-  resolve: {
-    extensions: [ '', '.js' ]
-  },
   plugins: [
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.DefinePlugin({
