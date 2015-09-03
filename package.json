@@ -37,7 +37,7 @@
   "scripts": {
     "start": "node server.js",
     "build": "webpack --config webpack.config.production.js",
-    "lint": ".eslint ."
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
