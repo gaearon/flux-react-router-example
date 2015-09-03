@@ -21,7 +21,7 @@ export default class Explore extends Component {
   };
 
   static contextTypes = {
-    router: PropTypes.object.isRequired
+    history: PropTypes.object.isRequired
   };
 
   shouldComponentUpdate = shouldPureComponentUpdate;
@@ -79,7 +79,7 @@ export default class Explore extends Component {
   }
 
   handleGoClick() {
-    this.context.router.transitionTo(`/${this.getInputValue()}`);
+    this.context.history.pushState(null, `/${this.getInputValue()}`);
   }
 
   getInputValue() {

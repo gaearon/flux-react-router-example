@@ -20,7 +20,7 @@ export default class Repo {
             {repo.name}
           </Link>
           {' by '}
-          <Link to={owner.login}>
+          <Link to={`/${owner.login}`}>
             {owner.login}
           </Link>
         </h3>
