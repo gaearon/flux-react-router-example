@@ -23,7 +23,7 @@ There are a few bits here I was especially interested in:
 * Router handlers are updated gracefully in `componentWillReceiveProps` if some page is requested with a different parameter;
 * [“Dumb”](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0) components use [pure rendering](https://github.com/gaearon/react-pure-render) as a performance optimization;
 * It demonstrates usage of [higher-order components](https://medium.com/@dan_abramov/mixins-are-dead-long-live-higher-order-components-94a0d2f9e750) through [decorators](https://github.com/wycats/javascript-decorators) (experimental);
-* It is is built in ES6 using [Babel](https://babeljs.io) and [Webpack](https://github.com/webpack/webpack), and has [React Hot Loader](http://gaearon.github.io/react-hot-loader/) integrated.
+* It is is built in ES6 using [Babel](https://babeljs.io) and [Webpack](https://github.com/webpack/webpack), and has [React Transform](https://github.com/gaearon/react-transform-boilerplate) integrated.
 
 ### Running
 
