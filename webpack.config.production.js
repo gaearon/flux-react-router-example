@@ -24,10 +24,17 @@ module.exports = {
     })
   ],
   module: {
-    loaders: [{
-      test: /\.jsx?$/,
-      loaders: ['babel'],
-      include: path.join(__dirname, 'scripts')
-    }]
+    loaders: [
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        exclude: /node_modules/,
+        include: path.join(__dirname, 'scripts'),
+        query: {
+          plugins: ['transform-decorators-legacy'],
+          presets: ['es2015', 'react', 'stage-1']
+        }
+      }
+    ]
   }
 };

@@ -3,9 +3,6 @@ import Explore from './components/Explore';
 import DocumentTitle from 'react-document-title';
 
 export default class App {
-  static propTypes = {
-    children: PropTypes.object
-  };
 
   render() {
     return (
@@ -19,3 +16,7 @@ export default class App {
     );
   }
 }
+
+App.propTypes = {
+  children: PropTypes.object
+};

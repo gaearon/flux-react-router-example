@@ -6,9 +6,6 @@ import RepoPage from './pages/RepoPage';
 import UserPage from './pages/UserPage';
 
 export default class Root extends Component {
-  static propTypes = {
-    history: PropTypes.object.isRequired
-  }
 
   render() {
     const { history } = this.props;
@@ -21,4 +18,8 @@ export default class Root extends Component {
       </Router>
     );
   }
+}
+
+Root.propTypes = {
+  history: PropTypes.object.isRequired
 }

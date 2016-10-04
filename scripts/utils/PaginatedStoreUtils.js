@@ -1,6 +1,6 @@
 import { createStore } from './StoreUtils';
 import PaginatedList from '../utils/PaginatedList';
-import invariant from 'react/lib/invariant';
+import invariant from 'invariant';
 
 const PROXIED_PAGINATED_LIST_METHODS = [
   'getIds', 'getPageCount', 'getNextPageUrl',

@@ -13,16 +13,6 @@ function parseFullName(params) {
 }
 
 export default class Explore extends Component {
-  static propTypes = {
-    params: PropTypes.shape({
-      login: PropTypes.string,
-      name: PropTypes.string
-    })
-  };
-
-  static contextTypes = {
-    history: PropTypes.object.isRequired
-  };
 
   shouldComponentUpdate = shouldPureComponentUpdate;
 
@@ -86,3 +76,14 @@ export default class Explore extends Component {
     return findDOMNode(this.refs.loginOrRepo).value;
   }
 }
+
+Explore.propTypes = {
+  params: PropTypes.shape({
+    login: PropTypes.string,
+    name: PropTypes.string
+  })
+};
+
+Explore.contextTypes = {
+  history: PropTypes.object.isRequired
+};

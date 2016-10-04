@@ -10,11 +10,14 @@
     "babel-runtime": "^6.11.6",
     "flux": "^3.0.0",
     "history": "^4.3.0",
+    "humps": "^1.1.0",
     "invariant": "^2.2.1",
     "keymirror": "^0.1.1",
     "normalizr": "^2.2.1",
     "react": "^15.3.2",
+    "react-document-title": "^2.0.2",
     "react-dom": "^15.3.2",
+    "react-pure-render": "^1.0.2",
     "react-router": "^2.8.1",
     "selectn": "^1.1.1",
     "underscore": "^1.8.3",
@@ -24,6 +27,9 @@
     "babel-eslint": "^7.0.0",
     "babel-loader": "^6.2.5",
     "babel-plugin-react-transform": "^2.0.2",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-preset-stage-0": "^6.16.0",
+    "babel-preset-stage-1": "^6.16.0",
     "eslint": "^3.7.1",
     "eslint-loader": "^1.5.0",
     "eslint-plugin-react": "^6.3.0",
@@ -34,7 +40,7 @@
   },
   "scripts": {
     "start": "node server.js",
-    "build": "webpack --config webpack.config.js",
+    "build": "webpack --config webpack.config.production.js",
     "lint": "eslint ."
   },
   "repository": {

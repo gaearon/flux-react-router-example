@@ -15,7 +15,7 @@ module.exports = {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin()
+    new webpack.NoErrorsPlugin(),
   ],
   module: {
     loaders: [
@@ -25,7 +25,8 @@ module.exports = {
         exclude: /node_modules/,
         include: path.join(__dirname, 'scripts'),
         query: {
-          presets: ['es2015', 'react']
+          plugins: ['transform-decorators-legacy'],
+          presets: ['es2015', 'react', 'stage-1']
         }
       }
     ]
