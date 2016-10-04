@@ -16,7 +16,6 @@
     "no-var": 2,
     "react/display-name": 0,
     "react/jsx-boolean-value": 2,
-    "react/jsx-quotes": 2,
     "react/jsx-no-undef": 2,
     "react/jsx-sort-props": 0,
     "react/jsx-uses-react": 2,
@@ -28,7 +27,8 @@
     "react/prop-types": 2,
     "react/react-in-jsx-scope": 2,
     "react/self-closing-comp": 2,
-    "react/wrap-multilines": 2,
+    "react/jsx-wrap-multilines": 2,
+    "jsx-quotes": [2, "prefer-single"],
     "quotes": [2, "single"],
     "space-before-function-paren": [2, {
       "anonymous": "always",

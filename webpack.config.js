@@ -18,10 +18,16 @@ module.exports = {
     new webpack.NoErrorsPlugin()
   ],
   module: {
-    loaders: [{
-      test: /\.js$/,
-      loaders: ['babel'],
-      include: path.join(__dirname, 'scripts')
-    }]
+    loaders: [
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        exclude: /node_modules/,
+        include: path.join(__dirname, 'scripts'),
+        query: {
+          presets: ['es2015', 'react']
+        }
+      }
+    ]
   }
 };
