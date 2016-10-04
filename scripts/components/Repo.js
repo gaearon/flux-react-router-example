@@ -1,8 +1,8 @@
-import React, { PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 import shouldPureComponentUpdate from 'react-pure-render/function';
 
-export default class Repo {
+export default class Repo extends Component {
   static propTypes = {
     repo: PropTypes.object.isRequired,
     owner: PropTypes.object.isRequired

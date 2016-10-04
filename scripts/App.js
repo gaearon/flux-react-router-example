@@ -1,8 +1,8 @@
-import React, { PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import Explore from './components/Explore';
 import DocumentTitle from 'react-document-title';
 
-export default class App {
+export default class App extends Component {
 
   render() {
     return (

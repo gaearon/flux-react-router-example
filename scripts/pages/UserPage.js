@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import * as RepoActionCreators from '../actions/RepoActionCreators';
 import * as UserActionCreators from '../actions/UserActionCreators';
 import StarredReposByUserStore from '../stores/StarredReposByUserStore';
@@ -47,7 +47,7 @@ function getState(props) {
 }
 
 @connectToStores([StarredReposByUserStore, UserStore, RepoStore], getState)
-export default class UserPage {
+export default class UserPage extends Component {
   static propTypes = {
     // Injected by React Router:
     params: PropTypes.shape({
@@ -62,7 +62,8 @@ export default class UserPage {
     isLastPageOfStarred: PropTypes.bool.isRequired
   };
 
-  constructor() {
+  constructor(props) {
+    super(props);
     this.renderStarredRepos = this.renderStarredRepos.bind(this);
     this.handleLoadMoreClick = this.handleLoadMoreClick.bind(this);
   }

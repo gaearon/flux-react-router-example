@@ -1,4 +1,5 @@
 import React, { Component, PropTypes, findDOMNode } from 'react';
+import ReactDOM from 'react-dom';
 import shouldPureComponentUpdate from 'react-pure-render/function';
 
 const DEFAULT_LOGIN = 'gaearon';
@@ -73,7 +74,7 @@ export default class Explore extends Component {
   }
 
   getInputValue() {
-    return findDOMNode(this.refs.loginOrRepo).value;
+    return ReactDOM.findDOMNode(this.refs.loginOrRepo).value;
   }
 }
 
