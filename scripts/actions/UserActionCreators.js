@@ -1,4 +1,4 @@
-import { dispatchAsync } from '../AppDispatcher';
+import AppDispatcher from '../AppDispatcher';
 import ActionTypes from '../constants/ActionTypes';
 import * as UserAPI from '../api/UserAPI';
 import UserStore from '../stores/UserStore';
@@ -10,7 +10,7 @@ export function requestUser(login, fields) {
     return;
   }
 
-  dispatchAsync(UserAPI.getUser(login), {
+  AppDispatcher.dispatchAsync(UserAPI.getUser(login), {
     request: ActionTypes.REQUEST_USER,
     success: ActionTypes.REQUEST_USER_SUCCESS,
     failure: ActionTypes.REQUEST_USER_ERROR
@@ -31,7 +31,7 @@ export function requestStargazerPage(fullName, isInitialRequest) {
   }
 
   const nextPageUrl = StargazersByRepoStore.getNextPageUrl(fullName);
-  dispatchAsync(UserAPI.getStargazerPage(fullName, nextPageUrl), {
+  AppDispatcher.dispatchAsync(UserAPI.getStargazerPage(fullName, nextPageUrl), {
     request: ActionTypes.REQUEST_STARGAZER_PAGE,
     success: ActionTypes.REQUEST_STARGAZER_PAGE_SUCCESS,
     failure: ActionTypes.REQUEST_STARGAZER_PAGE_ERROR

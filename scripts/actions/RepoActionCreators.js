@@ -1,4 +1,4 @@
-import { dispatchAsync } from '../AppDispatcher';
+import AppDispatcher from '../AppDispatcher';
 import ActionTypes from '../constants/ActionTypes';
 import * as RepoAPI from '../api/RepoAPI';
 import StarredReposByUserStore from '../stores/StarredReposByUserStore';
@@ -10,7 +10,7 @@ export function requestRepo(fullName, fields) {
     return;
   }
 
-  dispatchAsync(RepoAPI.getRepo(fullName), {
+  AppDispatcher.dispatchAsync(RepoAPI.getRepo(fullName), {
     request: ActionTypes.REQUEST_REPO,
     success: ActionTypes.REQUEST_REPO_SUCCESS,
     failure: ActionTypes.REQUEST_REPO_ERROR
@@ -31,7 +31,7 @@ export function requestStarredReposPage(login, isInitialRequest) {
   }
 
   const nextPageUrl = StarredReposByUserStore.getNextPageUrl(login);
-  dispatchAsync(RepoAPI.getStarredReposPage(login, nextPageUrl), {
+  AppDispatcher.dispatchAsync(RepoAPI.getStarredReposPage(login, nextPageUrl), {
     request: ActionTypes.REQUEST_STARRED_REPOS_PAGE,
     success: ActionTypes.REQUEST_STARRED_REPOS_PAGE_SUCCESS,
     failure: ActionTypes.REQUEST_STARRED_REPOS_PAGE_ERROR
