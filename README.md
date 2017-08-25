@@ -5,7 +5,7 @@ This is a sample Flux app I wrote on a weekend.
 It uses open Github API to display starred repos by users and stargazers by repo.
 
 >Note: I now prefer [Redux](https://github.com/rackt/redux) to Flux.  
->This example was [ported to Redux](https://github.com/rackt/redux/tree/master/examples/real-world).
+>This example was [ported to Redux](https://github.com/reactjs/redux/tree/master/examples/real-world).
 
 ![](http://i.imgur.com/MxPpyPb.png)
 
